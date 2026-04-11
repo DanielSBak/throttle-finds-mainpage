@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Throttle Finds | Licensed Automotive Dealer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Базові налаштування та кольори */
+        :root {
+            --bg-color: #0d0d0d;
+            --accent-red: #A62122;
+            --text-light: #f5f5f5;
+            --text-muted: #888888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            line-height: 1.5;
+            text-transform: uppercase;
+        }
+
+        /* Кінематографічне правило 16:9 для всіх медіа */
+        .cinematic-img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Шапка сайту */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.9);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #222;
+        }
+
+        .logo {
+            height: 30px;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-red);
+        }
+
+        /* Головний екран (Hero) */
+        .hero {
+            margin-top: 70px;
+            position: relative;
+            background-color: #000;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 50px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: var(--accent-red);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border: 2px solid var(--accent-red);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: transparent;
+            color: var(--accent-red);
+        }
+
+        /* Блок Inventory */
+        .section {
+            padding: 80px 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-red);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-red);
+        }
+
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
+        /* Блок About/Process */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-red);
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        /* Блок Форми (Bid) */
+        .form-container {
+            background: #111;
+            padding: 40px;
+            border-top: 4px solid var(--accent-red);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            border: 1px solid #333;
+            color: var(--text-light);
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-red);
+        }
+
+        /* Підвал */
+        footer {
+            background: #050505;
+            padding: 40px 50px;
+            text-align: center;
+            border-top: 1px solid #222;
+        }
+
+        .footer-info {
+            color: var(--text-muted);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="images/logo-text.png" alt="Throttle Finds" class="logo">
+        <nav>
+            <a href="#inventory">Inventory</a>
+            <a href="#process">About Us</a>
+            <a href="#bid">Bid a Car</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <img src="images/hero-bg.jpg" alt="Hero Background" class="cinematic-img">
+        <div class="hero-overlay">
+            <h1>Licensed Automotive Dealer</h1>
+            <p>Experts in Auction Finds & Rebuilds</p>
+            <div>
+                <a href="#inventory" class="btn">View Inventory</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="inventory" class="section">
+        <div style="text-align: center;">
+            <h2 class="section-title">Current Throttle Finds</h2>
+        </div>
+        <div class="grid-3">
+            <div class="card">
+                <img src="images/car-1.jpg" alt="Muscle Car" class="cinematic-img">
+                <div class="card-content">
+                    <h3>Performance Coupe</h3>
+                    <a href="https://www.facebook.com/marketplace/" target="_blank" class="btn btn-small">View on Marketplace</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/car-2.jpg" alt="Sedan" class="cinematic-img">
+                <div class="card-content">
+                    <h3>Premium Sedan</h3>
+                    <a href="https://www.facebook.com/marketplace/" target="_blank" class="btn btn-small">View on Marketplace</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/car-3.jpg" alt="SUV" class="cinematic-img">
+                <div class="card-content">
+                    <h3>Luxury SUV</h3>
+                    <a href="https://www.facebook.com/marketplace/" target="_blank" class="btn btn-small">View on Marketplace</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="process" class="section">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>From Auction to Reality</h2>
+                <p>We specialize in sourcing high-potential vehicles from auctions. Our expert team handles the entire rebuild process to bring these machines back to premium condition.</p>
+                <p>Skip the dealership markup. Get exactly what you want, built right.</p>
+            </div>
+            <div>
+                <img src="images/process.jpg" alt="Rebuild Process" class="cinematic-img">
+            </div>
+        </div>
+    </section>
+
+    <section id="bid" class="section">
+        <div class="form-container">
+            <div style="text-align: center;">
+                <h2 class="section-title">Order Your Next Car</h2>
+                <p style="margin-bottom: 30px; color: #888;">Tell us what you're looking for, and we'll find it at the auction.</p>
+            </div>
+            <form action="#" method="POST" style="max-width: 600px; margin: 0 auto;">
+                <div class="form-group">
+                    <input type="text" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Email or Phone Number" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Desired Model (e.g. Corvette, Mustang)" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Estimated Budget ($)" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Submit Request</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <h2 style="color: var(--text-light); letter-spacing: 2px;">THROTTLE FINDS</h2>
+        <div class="footer-info">
+            <p>1234 ANDERSON ROAD, SPARTANBURG, SOUTH CAROLINA 29611</p>
+            <p>(864) 270-3379</p>
+            <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2026 THROTTLE FINDS. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
