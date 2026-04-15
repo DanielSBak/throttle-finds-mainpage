@@ -240,6 +240,7 @@
             .hero p { font-size: 1.2rem; }
             .hero-overlay { padding: 0 20px; }
             .section { padding: 40px 15px; }
+            
             .grid-3 {
                 display: flex;
                 overflow-x: auto;
@@ -250,23 +251,24 @@
             }
             .grid-3::-webkit-scrollbar { display: none; }
             
-            /* КАРТКИ (стало 30%) */
+            /* БЕТОННА ФІКСАЦІЯ РОЗМІРУ КАРТОК (Flexbox Bug Fix) */
             .grid-3 .card {
-                min-width: 30%; 
+                flex: 0 0 35%; /* Жорстко забороняє розтягуватися. Поставив 35%, щоб текст влазив */
+                max-width: 35%;
                 scroll-snap-align: start;
-                flex-shrink: 0;
+                overflow: hidden; /* Обрізає все, що намагається вилізти */
             }
             
-            /* ФІКС: Картинки тепер масштабуються під розмір карток */
             .grid-3 .card img {
-                max-width: 100% !important;
+                width: 100% !important;
                 height: auto !important;
-                aspect-ratio: 16 / 9;
+                object-fit: cover;
             }
             
             .card-content { padding: 15px 10px; }
-            .card h3 { font-size: 1.2rem; margin-bottom: 10px; }
-            .btn-small { padding: 8px 15px; font-size: 0.85rem; }
+            .card h3 { font-size: 1rem; margin-bottom: 10px; }
+            .btn-small { padding: 8px 10px; font-size: 0.8rem; }
+            
             .about-grid { grid-template-columns: 1fr; text-align: center; }
             .form-container { padding: 20px; }
             footer { padding: 30px 20px; }
