@@ -226,6 +226,7 @@
             color: var(--text-muted);
             margin-top: 20px;
         }
+
         /* --- АДАПТИВНІСТЬ ДЛЯ ТЕЛЕФОНІВ (MOBILE RESPONSIVE) --- */
         @media (max-width: 768px) {
             /* Перебудовуємо шапку */
@@ -257,10 +258,30 @@
             .section {
                 padding: 50px 20px;
             }
+            
+            /* Робимо горизонтальний скрол-карусель для машин */
             .grid-3 {
-                grid-template-columns: 1fr;
-                gap: 20px;
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                gap: 15px;
+                padding-bottom: 20px;
+                /* Плавна прокрутка на iOS */
+                -webkit-overflow-scrolling: touch; 
             }
+            
+            /* Ховаємо системну смугу прокрутки для краси */
+            .grid-3::-webkit-scrollbar {
+                display: none;
+            }
+            
+            /* Налаштування самих карток у каруселі */
+            .grid-3 .card {
+                min-width: 85%; /* Видно 1 картку і шматочок наступної */
+                scroll-snap-align: start;
+                flex-shrink: 0;
+            }
+            
             .about-grid {
                 grid-template-columns: 1fr;
                 text-align: center;
