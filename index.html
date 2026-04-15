@@ -256,7 +256,7 @@
             
             /* Робимо всі сітки в ОДНУ колонку */
             .section {
-                padding: 50px 20px;
+                padding: 40px 15px;
             }
             
             /* Робимо горизонтальний скрол-карусель для машин */
@@ -275,11 +275,24 @@
                 display: none;
             }
             
-            /* Налаштування самих карток у каруселі */
+            /* ЗМЕНШЕНИЙ МАСШТАБ КАРТОК (було 85%, стало 65%) */
             .grid-3 .card {
-                min-width: 85%; /* Видно 1 картку і шматочок наступної */
+                min-width: 65%; 
                 scroll-snap-align: start;
                 flex-shrink: 0;
+            }
+            
+            /* Зменшуємо текст та кнопки всередині карток для мобільних */
+            .card-content {
+                padding: 15px 10px;
+            }
+            .card h3 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            .btn-small {
+                padding: 8px 15px;
+                font-size: 0.85rem;
             }
             
             .about-grid {
@@ -345,56 +358,3 @@
                 <div class="card-content">
                     <h3>Luxury SUV</h3>
                     <a href="https://www.facebook.com/marketplace/" target="_blank" class="btn btn-small">View on Marketplace</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="process" class="section">
-        <div class="about-grid">
-            <div class="about-text">
-                <h2>From Auction to Reality</h2>
-                <p>We specialize in sourcing high-potential vehicles from auctions. Our expert team handles the entire rebuild process to bring these machines back to premium condition.</p>
-                <p>Skip the dealership markup. Get exactly what you want, built right.</p>
-            </div>
-            <div>
-                <img src="images/process.jpg" alt="Rebuild Process" class="cinematic-img">
-            </div>
-        </div>
-    </section>
-
-    <section id="bid" class="section">
-        <div class="form-container">
-            <div style="text-align: center;">
-                <h2 class="section-title">Order Your Next Car</h2>
-                <p style="margin-bottom: 30px; color: #888;">Tell us what you're looking for, and we'll find it at the auction.</p>
-            </div>
-            <form action="#" method="POST" style="max-width: 600px; margin: 0 auto;">
-                <div class="form-group">
-                    <input type="text" placeholder="Your Name" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" placeholder="Email or Phone Number" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" placeholder="Desired Model (e.g. Corvette, Mustang)" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" placeholder="Estimated Budget ($)" required>
-                </div>
-                <button type="submit" class="btn" style="width: 100%;">Submit Request</button>
-            </form>
-        </div>
-    </section>
-
-    <footer>
-        <h2 style="color: var(--text-light); letter-spacing: 2px;">THROTTLE FINDS</h2>
-        <div class="footer-info">
-            <p>1234 ANDERSON ROAD, SPARTANBURG, SOUTH CAROLINA 29611</p>
-            <p>(864) 270-3379</p>
-            <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2026 THROTTLE FINDS. ALL RIGHTS RESERVED.</p>
-        </div>
-    </footer>
-
-</body>
-</html>
