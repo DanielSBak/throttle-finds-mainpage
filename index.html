@@ -226,6 +226,56 @@
             color: var(--text-muted);
             margin-top: 20px;
         }
+        /* --- АДАПТИВНІСТЬ ДЛЯ ТЕЛЕФОНІВ (MOBILE RESPONSIVE) --- */
+        @media (max-width: 768px) {
+            /* Перебудовуємо шапку */
+            header {
+                flex-direction: column;
+                padding: 15px 20px;
+                text-align: center;
+            }
+            .logo {
+                margin-bottom: 15px;
+            }
+            nav a {
+                margin: 0 10px;
+                font-size: 0.9rem;
+            }
+            
+            /* Зменшуємо шрифти і відступи на головному екрані */
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p {
+                font-size: 1.2rem;
+            }
+            .hero-overlay {
+                padding: 0 20px;
+            }
+            
+            /* Робимо всі сітки в ОДНУ колонку */
+            .section {
+                padding: 50px 20px;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .about-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            /* Звужуємо форму */
+            .form-container {
+                padding: 20px;
+            }
+            
+            /* Підвал */
+            footer {
+                padding: 30px 20px;
+            }
+        }
     </style>
 </head>
 <body>
