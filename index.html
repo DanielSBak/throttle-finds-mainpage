@@ -251,12 +251,12 @@
             }
             .grid-3::-webkit-scrollbar { display: none; }
             
-            /* БЕТОННА ФІКСАЦІЯ РОЗМІРУ КАРТОК (Flexbox Bug Fix) */
+            /* БЕТОННА ФІКСАЦІЯ РОЗМІРУ КАРТОК (Змінено на 55%) */
             .grid-3 .card {
-                flex: 0 0 35%; /* Жорстко забороняє розтягуватися. Поставив 35%, щоб текст влазив */
-                max-width: 35%;
+                flex: 0 0 55%; 
+                max-width: 55%;
                 scroll-snap-align: start;
-                overflow: hidden; /* Обрізає все, що намагається вилізти */
+                overflow: hidden; 
             }
             
             .grid-3 .card img {
