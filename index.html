@@ -29,7 +29,7 @@
             text-transform: uppercase;
         }
 
-        /* Шапка */
+        /* Шапка - 3 колонки для ідеального центрування */
         header {
             display: flex;
             justify-content: space-between;
@@ -41,7 +41,19 @@
             top: 0;
             z-index: 100;
         }
-        .logo { height: 35px; }
+        
+        .header-left, .header-center, .header-right {
+            flex: 1;
+            display: flex;
+        }
+        
+        .header-left { justify-content: flex-start; align-items: center; }
+        .header-center { justify-content: center; align-items: center; }
+        .header-right { justify-content: flex-end; align-items: center; }
+
+        .logo-icon { height: 40px; } /* Розмір іконки зліва */
+        .logo-text { height: 30px; } /* Розмір тексту по центру */
+
         .header-socials a {
             color: var(--text-light);
             font-size: 1.2rem;
@@ -131,7 +143,7 @@
         }
         .specs-grid span { color: var(--text-light); font-weight: 700; }
 
-        /* Міні-галерея (Квадратики з малюнку) */
+        /* Міні-галерея */
         .thumbnails {
             display: flex;
             gap: 10px;
@@ -203,7 +215,17 @@
 
         /* Адаптивність для телефонів */
         @media (max-width: 768px) {
-            header { padding: 15px 20px; }
+            header { 
+                flex-direction: column; 
+                gap: 15px; 
+                padding: 15px 20px; 
+            }
+            .header-left, .header-center, .header-right { 
+                width: 100%; 
+                justify-content: center; 
+            }
+            .header-socials a { margin: 0 10px; }
+            
             .sort-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
             .sort-options { width: 100%; }
             .sort-options select { width: 100%; }
@@ -220,12 +242,24 @@
 </head>
 <body>
 
-    <!-- Шапка з лого і соцмережами -->
+    <!-- ОНОВЛЕНА ШАПКА -->
     <header>
-        <img src="images/logo-text.png" alt="Throttle Finds" class="logo">
-        <div class="header-socials">
-            <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.instagram.com/throttlefinds/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <div class="header-left">
+            <!-- Твоя нова іконка зліва -->
+            <img src="images/logo-icon.png" alt="Icon" class="logo-icon">
+        </div>
+        
+        <div class="header-center">
+            <!-- Текстове лого по центру -->
+            <img src="images/logo-text.png" alt="Throttle Finds" class="logo-text">
+        </div>
+
+        <div class="header-right">
+            <!-- Соцмережі справа -->
+            <div class="header-socials">
+                <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/throttlefinds/" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
         </div>
     </header>
 
@@ -275,7 +309,7 @@
             </div>
         </div>
 
-        <!-- КАРТКА МАШИНИ 2 (Приклад) -->
+        <!-- КАРТКА МАШИНИ 2 -->
         <div class="car-card">
             <div class="car-img-section">
                 <img src="images/car-2.jpg" alt="Sedan" class="main-img">
