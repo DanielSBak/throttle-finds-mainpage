@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Підключення іконок FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         /* Базові налаштування та кольори */
@@ -227,6 +229,26 @@
             margin-top: 20px;
         }
 
+        /* Стилі для соцмереж */
+        .social-links {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .social-links a {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-red);
+            transform: translateY(-3px);
+        }
+
         /* --- АДАПТИВНІСТЬ ДЛЯ ТЕЛЕФОНІВ (MOBILE RESPONSIVE) --- */
         @media (max-width: 768px) {
             header {
@@ -251,7 +273,7 @@
             }
             .grid-3::-webkit-scrollbar { display: none; }
             
-            /* БЕТОННА ФІКСАЦІЯ РОЗМІРУ КАРТОК (Змінено на 55%) */
+            /* БЕТОННА ФІКСАЦІЯ РОЗМІРУ КАРТОК (55%) */
             .grid-3 .card {
                 flex: 0 0 55%; 
                 max-width: 55%;
@@ -340,11 +362,11 @@
                 <h2 class="section-title">Order Your Next Car</h2>
                 <p style="margin-bottom: 30px; color: #888;">Tell us what you're looking for, and we'll find it at the auction.</p>
             </div>
-            <form action="#" method="POST" style="max-width: 600px; margin: 0 auto;">
-                <div class="form-group"> <input type="text" placeholder="Your Name" required> </div>
-                <div class="form-group"> <input type="email" placeholder="Email or Phone Number" required> </div>
-                <div class="form-group"> <input type="text" placeholder="Desired Model (e.g. Corvette, Mustang)" required> </div>
-                <div class="form-group"> <input type="text" placeholder="Estimated Budget ($)" required> </div>
+            <form action="YOUR_FORMSPREE_LINK_HERE" method="POST" style="max-width: 600px; margin: 0 auto;">
+                <div class="form-group"> <input type="text" name="Name" placeholder="Your Name" required> </div>
+                <div class="form-group"> <input type="text" name="Contact" placeholder="Email or Phone Number" required> </div>
+                <div class="form-group"> <input type="text" name="Model" placeholder="Desired Model (e.g. Corvette, Mustang)" required> </div>
+                <div class="form-group"> <input type="text" name="Budget" placeholder="Estimated Budget ($)" required> </div>
                 <button type="submit" class="btn" style="width: 100%;">Submit Request</button>
             </form>
         </div>
@@ -354,6 +376,13 @@
         <div class="footer-info">
             <p>860 W MAIN ST STE B, SPARTANBURG, SC 29301</p>
             <p>(864) 270-3379</p>
+            
+            <!-- Блок соціальних мереж (тільки Інста і Маркетплейс) -->
+            <div class="social-links">
+                <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/throttlefinds/" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+
             <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2026 THROTTLE FINDS. ALL RIGHTS RESERVED.</p>
         </div>
     </footer>
