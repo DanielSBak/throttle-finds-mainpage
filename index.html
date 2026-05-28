@@ -1,3 +1,5 @@
+---
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +31,6 @@
             text-transform: uppercase;
         }
 
-        /* Шапка - 3 колонки для ідеального центрування */
         header {
             display: flex;
             justify-content: space-between;
@@ -42,24 +43,13 @@
             z-index: 100;
         }
         
-        .header-left, .header-center, .header-right {
-            flex: 1;
-            display: flex;
-        }
-        
+        .header-left, .header-center, .header-right { flex: 1; display: flex; }
         .header-left { justify-content: flex-start; align-items: center; }
         .header-center { justify-content: center; align-items: center; }
         .header-right { justify-content: flex-end; align-items: center; }
 
-        /* Збільшені логотипи */
-        .logo-icon { 
-            height: 70px; 
-            object-fit: contain;
-        } 
-        .logo-text { 
-            height: 45px; 
-            object-fit: contain;
-        } 
+        .logo-icon { height: 70px; object-fit: contain; } 
+        .logo-text { height: 45px; object-fit: contain; } 
 
         .header-socials a {
             color: var(--text-light);
@@ -69,14 +59,12 @@
         }
         .header-socials a:hover { color: var(--accent-red); }
 
-        /* Контейнер сторінки */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
 
-        /* Панель сортування */
         .sort-bar {
             display: flex;
             justify-content: space-between;
@@ -98,7 +86,6 @@
             cursor: pointer;
         }
 
-        /* Картка Машини */
         .car-card {
             display: flex;
             background: var(--bg-card);
@@ -108,16 +95,8 @@
         }
         .car-card:hover { border-color: var(--accent-red); }
         
-        .car-img-section {
-            flex: 0 0 50%;
-            border-right: 1px solid var(--border-color);
-        }
-        .main-img {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            object-fit: cover;
-            display: block;
-        }
+        .car-img-section { flex: 0 0 50%; border-right: 1px solid var(--border-color); }
+        .main-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
 
         .car-details {
             flex: 1;
@@ -125,11 +104,7 @@
             display: flex;
             flex-direction: column;
         }
-        .car-title {
-            font-size: 2rem;
-            margin-bottom: 5px;
-            color: var(--text-light);
-        }
+        .car-title { font-size: 2rem; margin-bottom: 5px; color: var(--text-light); }
         .car-price {
             font-size: 1.8rem;
             color: var(--accent-red);
@@ -139,7 +114,6 @@
             padding-bottom: 10px;
         }
 
-        /* Характеристики */
         .specs-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -150,13 +124,7 @@
         }
         .specs-grid span { color: var(--text-light); font-weight: 700; }
 
-        /* Міні-галерея */
-        .thumbnails {
-            display: flex;
-            gap: 10px;
-            margin-top: auto;
-            margin-bottom: 25px;
-        }
+        .thumbnails { display: flex; gap: 10px; margin-top: auto; margin-bottom: 25px; }
         .thumbnails img {
             width: 80px;
             height: 60px;
@@ -167,7 +135,6 @@
         }
         .thumbnails img:hover { border-color: var(--accent-red); }
 
-        /* Кнопка */
         .btn {
             display: inline-block;
             padding: 15px 30px;
@@ -184,7 +151,6 @@
         }
         .btn:hover { background-color: transparent; color: var(--accent-red); }
 
-        /* Форма аплікації */
         .form-container {
             background: var(--bg-card);
             padding: 50px;
@@ -204,7 +170,6 @@
         }
         .form-group input:focus { outline: none; border-color: var(--accent-red); }
 
-        /* Підвал */
         footer {
             background: #050505;
             padding: 40px 20px;
@@ -220,31 +185,18 @@
         }
         .social-links a:hover { color: var(--accent-red); }
 
-        /* Адаптивність для телефонів */
         @media (max-width: 768px) {
-            header { 
-                flex-direction: column; 
-                gap: 15px; 
-                padding: 15px 20px; 
-            }
-            .header-left, .header-center, .header-right { 
-                width: 100%; 
-                justify-content: center; 
-            }
-            
+            header { flex-direction: column; gap: 15px; padding: 15px 20px; }
+            .header-left, .header-center, .header-right { width: 100%; justify-content: center; }
             .logo-icon { height: 50px; }
             .logo-text { height: 35px; }
-
             .header-socials a { margin: 0 10px; }
-            
             .sort-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
             .sort-options { width: 100%; }
             .sort-options select { width: 100%; }
-            
             .car-card { flex-direction: column; }
             .car-img-section { border-right: none; border-bottom: 1px solid var(--border-color); }
             .car-details { padding: 20px; }
-            
             .specs-grid { grid-template-columns: 1fr; }
             .thumbnails img { width: 60px; height: 45px; }
             .form-container { padding: 25px; }
@@ -256,16 +208,13 @@
 </head>
 <body>
 
-    <!-- ШАПКА -->
     <header>
         <div class="header-left">
             <img src="images/logo-icon.png" alt="Icon" class="logo-icon">
         </div>
-        
         <div class="header-center">
             <img src="images/logo-text.png" alt="Throttle Finds" class="logo-text">
         </div>
-
         <div class="header-right">
             <div class="header-socials">
                 <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -276,7 +225,6 @@
 
     <main class="container">
         
-        <!-- Панель сортування -->
         <div class="sort-bar">
             <h1>Current Inventory</h1>
             <div class="sort-options">
@@ -289,62 +237,38 @@
             </div>
         </div>
 
-        <!-- КАРТКА МАШИНИ 1 -->
-        <div class="car-card">
-            <div class="car-img-section">
-                <img src="images/car-1.jpg" alt="Muscle Car" class="main-img">
-            </div>
-            <div class="car-details">
-                <h2 class="car-title">2020 Dodge Challenger R/T</h2>
-                <div class="car-price">$28,500</div>
-                
-                <div class="specs-grid">
-                    <div><strong>VIN:</strong> <span>2C3CDZAG2LHXXXXXX</span></div>
-                    <div><strong>Mileage:</strong> <span>34,500 mi</span></div>
-                    <div><strong>Engine:</strong> <span>5.7L V8 HEMI</span></div>
-                    <div><strong>Transmission:</strong> <span>8-Speed Auto</span></div>
-                    <div><strong>Drive:</strong> <span>RWD</span></div>
-                    <div><strong>Status:</strong> <span>Rebuilt Title</span></div>
+        <!-- АВТОМАТИЧНИЙ ЦИКЛ ВИВЕДЕННЯ МАШИН -->
+        <div id="dynamic-inventory">
+            {% for car in site.cars %}
+            <div class="car-card">
+                <div class="car-img-section">
+                    <img src="{{ car.main_image }}" alt="{{ car.title }}" class="main-img">
                 </div>
+                <div class="car-details">
+                    <h2 class="car-title">{{ car.title }}</h2>
+                    <div class="car-price">${{ car.price }}</div>
+                    
+                    <div class="specs-grid">
+                        <div><strong>VIN:</strong> <span>{{ car.vin }}</span></div>
+                        <div><strong>Mileage:</strong> <span>{{ car.mileage }} mi</span></div>
+                        <div><strong>Engine:</strong> <span>{{ car.engine }}</span></div>
+                        <div><strong>Transmission:</strong> <span>{{ car.transmission }}</span></div>
+                        <div><strong>Drive:</strong> <span>{{ car.drive }}</span></div>
+                        <div><strong>Status:</strong> <span>{{ car.status }}</span></div>
+                    </div>
 
-                <div class="thumbnails">
-                    <img src="images/car-1.jpg" alt="Thumb 1">
-                    <img src="images/car-2.jpg" alt="Thumb 2">
-                    <img src="images/car-3.jpg" alt="Thumb 3">
+                    <div class="thumbnails">
+                        <!-- Виводимо мініатюру головного фото -->
+                        <img src="{{ car.main_image }}" alt="Thumb">
+                    </div>
+
+                    <a href="#application-form" class="btn">Apply For This Vehicle</a>
                 </div>
-
-                <a href="#application-form" class="btn">Apply For This Vehicle</a>
             </div>
+            {% endfor %}
         </div>
+        <!-- КІНЕЦЬ ЦИКЛУ -->
 
-        <!-- КАРТКА МАШИНИ 2 -->
-        <div class="car-card">
-            <div class="car-img-section">
-                <img src="images/car-2.jpg" alt="Sedan" class="main-img">
-            </div>
-            <div class="car-details">
-                <h2 class="car-title">2019 BMW 330i xDrive</h2>
-                <div class="car-price">$24,900</div>
-                
-                <div class="specs-grid">
-                    <div><strong>VIN:</strong> <span>WBA5R7C56K8XXXXXX</span></div>
-                    <div><strong>Mileage:</strong> <span>42,100 mi</span></div>
-                    <div><strong>Engine:</strong> <span>2.0L 4-Cylinder Turbo</span></div>
-                    <div><strong>Transmission:</strong> <span>8-Speed Auto</span></div>
-                    <div><strong>Drive:</strong> <span>AWD</span></div>
-                    <div><strong>Status:</strong> <span>Clean Title</span></div>
-                </div>
-
-                <div class="thumbnails">
-                    <img src="images/car-2.jpg" alt="Thumb 1">
-                    <img src="images/car-1.jpg" alt="Thumb 2">
-                </div>
-
-                <a href="#application-form" class="btn">Apply For This Vehicle</a>
-            </div>
-        </div>
-
-        <!-- Форма Аплікації -->
         <div id="application-form" class="form-container">
             <div style="text-align: center; margin-bottom: 30px;">
                 <h2 style="font-size: 2.5rem; color: var(--accent-red);">Vehicle Application</h2>
@@ -362,7 +286,6 @@
 
     </main>
 
-    <!-- Підвал -->
     <footer>
         <h2 style="color: var(--text-light); letter-spacing: 2px;">THROTTLE FINDS</h2>
         <div style="color: var(--text-muted); margin-top: 10px;">
@@ -376,7 +299,6 @@
         <p style="color: #555; font-size: 0.8rem;">&copy; 2026 THROTTLE FINDS. ALL RIGHTS RESERVED.</p>
     </footer>
 
-    <!-- Додаємо логіку, щоб після логіну сайт розумів, що треба робити -->
     <script>
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {
