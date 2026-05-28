@@ -1,15 +1,16 @@
 backend:
-  name: github
-  repo: DanielSBak/throttle-finds-mainpage
+  name: git-gateway
   branch: main
 
-media_folder: "images/uploads" # Куди зберігатимуться фотографії
+site_domain: "rainbow-lokum-1f9076.netlify.app"
+
+media_folder: "images/uploads" 
 public_folder: "images/uploads"
 
 collections:
   - name: "cars"
     label: "Inventory (Cars)"
-    folder: "cars" # У цій папці будуть зберігатися файли машин
+    folder: "cars" 
     create: true
     slug: "{{slug}}"
     fields:
