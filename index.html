@@ -51,8 +51,15 @@
         .header-center { justify-content: center; align-items: center; }
         .header-right { justify-content: flex-end; align-items: center; }
 
-        .logo-icon { height: 40px; } /* Розмір іконки зліва */
-        .logo-text { height: 30px; } /* Розмір тексту по центру */
+        /* Збільшені логотипи */
+        .logo-icon { 
+            height: 70px; 
+            object-fit: contain;
+        } 
+        .logo-text { 
+            height: 45px; 
+            object-fit: contain;
+        } 
 
         .header-socials a {
             color: var(--text-light);
@@ -69,7 +76,7 @@
             padding: 40px 20px;
         }
 
-        /* Панель сортування (як на малюнку) */
+        /* Панель сортування */
         .sort-bar {
             display: flex;
             justify-content: space-between;
@@ -102,7 +109,7 @@
         .car-card:hover { border-color: var(--accent-red); }
         
         .car-img-section {
-            flex: 0 0 50%; /* Займає 50% ширини на ПК */
+            flex: 0 0 50%;
             border-right: 1px solid var(--border-color);
         }
         .main-img {
@@ -224,6 +231,11 @@
                 width: 100%; 
                 justify-content: center; 
             }
+            
+            /* На мобільних можна зробити трохи меншими, щоб поміщалося */
+            .logo-icon { height: 50px; }
+            .logo-text { height: 35px; }
+
             .header-socials a { margin: 0 10px; }
             
             .sort-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
@@ -242,20 +254,17 @@
 </head>
 <body>
 
-    <!-- ОНОВЛЕНА ШАПКА -->
+    <!-- ШАПКА -->
     <header>
         <div class="header-left">
-            <!-- Твоя нова іконка зліва -->
             <img src="images/logo-icon.png" alt="Icon" class="logo-icon">
         </div>
         
         <div class="header-center">
-            <!-- Текстове лого по центру -->
             <img src="images/logo-text.png" alt="Throttle Finds" class="logo-text">
         </div>
 
         <div class="header-right">
-            <!-- Соцмережі справа -->
             <div class="header-socials">
                 <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank"><i class="fab fa-facebook"></i></a>
                 <a href="https://www.instagram.com/throttlefinds/" target="_blank"><i class="fab fa-instagram"></i></a>
@@ -281,7 +290,6 @@
         <!-- КАРТКА МАШИНИ 1 -->
         <div class="car-card">
             <div class="car-img-section">
-                <!-- Головне фото -->
                 <img src="images/car-1.jpg" alt="Muscle Car" class="main-img">
             </div>
             <div class="car-details">
@@ -297,14 +305,12 @@
                     <div><strong>Status:</strong> <span>Rebuilt Title</span></div>
                 </div>
 
-                <!-- Міні-галерея -->
                 <div class="thumbnails">
                     <img src="images/car-1.jpg" alt="Thumb 1">
                     <img src="images/car-2.jpg" alt="Thumb 2">
                     <img src="images/car-3.jpg" alt="Thumb 3">
                 </div>
 
-                <!-- Кнопка заявки -->
                 <a href="#application-form" class="btn">Apply For This Vehicle</a>
             </div>
         </div>
@@ -336,7 +342,7 @@
             </div>
         </div>
 
-        <!-- Форма Аплікації (Брокер / Фінансування) -->
+        <!-- Форма Аплікації -->
         <div id="application-form" class="form-container">
             <div style="text-align: center; margin-bottom: 30px;">
                 <h2 style="font-size: 2.5rem; color: var(--accent-red);">Vehicle Application</h2>
