@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
     <style>
         :root {
             --bg-color: #0d0d0d;
@@ -31,6 +33,7 @@
             text-transform: uppercase;
         }
 
+        /* Шапка - 3 колонки для ідеального центрування */
         header {
             display: flex;
             justify-content: space-between;
@@ -43,13 +46,24 @@
             z-index: 100;
         }
         
-        .header-left, .header-center, .header-right { flex: 1; display: flex; }
+        .header-left, .header-center, .header-right {
+            flex: 1;
+            display: flex;
+        }
+        
         .header-left { justify-content: flex-start; align-items: center; }
         .header-center { justify-content: center; align-items: center; }
         .header-right { justify-content: flex-end; align-items: center; }
 
-        .logo-icon { height: 70px; object-fit: contain; } 
-        .logo-text { height: 45px; object-fit: contain; } 
+        /* Збільшені логотипи */
+        .logo-icon { 
+            height: 70px; 
+            object-fit: contain;
+        } 
+        .logo-text { 
+            height: 45px; 
+            object-fit: contain;
+        } 
 
         .header-socials a {
             color: var(--text-light);
@@ -59,12 +73,14 @@
         }
         .header-socials a:hover { color: var(--accent-red); }
 
+        /* Контейнер сторінки */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
 
+        /* Панель сортування */
         .sort-bar {
             display: flex;
             justify-content: space-between;
@@ -86,6 +102,7 @@
             cursor: pointer;
         }
 
+        /* Картка Машини */
         .car-card {
             display: flex;
             background: var(--bg-card);
@@ -95,8 +112,16 @@
         }
         .car-card:hover { border-color: var(--accent-red); }
         
-        .car-img-section { flex: 0 0 50%; border-right: 1px solid var(--border-color); }
-        .main-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+        .car-img-section {
+            flex: 0 0 50%;
+            border-right: 1px solid var(--border-color);
+        }
+        .main-img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+        }
 
         .car-details {
             flex: 1;
@@ -104,7 +129,11 @@
             display: flex;
             flex-direction: column;
         }
-        .car-title { font-size: 2rem; margin-bottom: 5px; color: var(--text-light); }
+        .car-title {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
         .car-price {
             font-size: 1.8rem;
             color: var(--accent-red);
@@ -114,6 +143,7 @@
             padding-bottom: 10px;
         }
 
+        /* Характеристики */
         .specs-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -124,7 +154,13 @@
         }
         .specs-grid span { color: var(--text-light); font-weight: 700; }
 
-        .thumbnails { display: flex; gap: 10px; margin-top: auto; margin-bottom: 25px; }
+        /* Міні-галерея */
+        .thumbnails {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            margin-bottom: 25px;
+        }
         .thumbnails img {
             width: 80px;
             height: 60px;
@@ -135,6 +171,7 @@
         }
         .thumbnails img:hover { border-color: var(--accent-red); }
 
+        /* Кнопка */
         .btn {
             display: inline-block;
             padding: 15px 30px;
@@ -151,6 +188,7 @@
         }
         .btn:hover { background-color: transparent; color: var(--accent-red); }
 
+        /* Форма аплікації */
         .form-container {
             background: var(--bg-card);
             padding: 50px;
@@ -170,6 +208,7 @@
         }
         .form-group input:focus { outline: none; border-color: var(--accent-red); }
 
+        /* Підвал */
         footer {
             background: #050505;
             padding: 40px 20px;
@@ -185,26 +224,37 @@
         }
         .social-links a:hover { color: var(--accent-red); }
 
+        /* Адаптивність для телефонів */
         @media (max-width: 768px) {
-            header { flex-direction: column; gap: 15px; padding: 15px 20px; }
-            .header-left, .header-center, .header-right { width: 100%; justify-content: center; }
+            header { 
+                flex-direction: column; 
+                gap: 15px; 
+                padding: 15px 20px; 
+            }
+            .header-left, .header-center, .header-right { 
+                width: 100%; 
+                justify-content: center; 
+            }
+            
             .logo-icon { height: 50px; }
             .logo-text { height: 35px; }
+
             .header-socials a { margin: 0 10px; }
+            
             .sort-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
             .sort-options { width: 100%; }
             .sort-options select { width: 100%; }
+            
             .car-card { flex-direction: column; }
             .car-img-section { border-right: none; border-bottom: 1px solid var(--border-color); }
             .car-details { padding: 20px; }
+            
             .specs-grid { grid-template-columns: 1fr; }
             .thumbnails img { width: 60px; height: 45px; }
             .form-container { padding: 25px; }
         }
     </style>
 
-    <!-- Підключення Netlify Identity для реєстрації -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
@@ -212,9 +262,11 @@
         <div class="header-left">
             <img src="images/logo-icon.png" alt="Icon" class="logo-icon">
         </div>
+        
         <div class="header-center">
             <img src="images/logo-text.png" alt="Throttle Finds" class="logo-text">
         </div>
+
         <div class="header-right">
             <div class="header-socials">
                 <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -237,15 +289,14 @@
             </div>
         </div>
 
-        <!-- АВТОМАТИЧНИЙ ЦИКЛ ВИВЕДЕННЯ МАШИН -->
         <div id="dynamic-inventory">
             {% for car in site.cars %}
             <div class="car-card">
                 <div class="car-img-section">
-                    <img src="{{ car.main_image }}" alt="{{ car.title }}" class="main-img">
+                    <img src="{{ car.main_image }}" alt="{{ car.make }} {{ car.model }}" class="main-img">
                 </div>
                 <div class="car-details">
-                    <h2 class="car-title">{{ car.title }}</h2>
+                    <h2 class="car-title">{{ car.year }} {{ car.make }} {{ car.model }}</h2>
                     <div class="car-price">${{ car.price }}</div>
                     
                     <div class="specs-grid">
@@ -254,11 +305,10 @@
                         <div><strong>Engine:</strong> <span>{{ car.engine }}</span></div>
                         <div><strong>Transmission:</strong> <span>{{ car.transmission }}</span></div>
                         <div><strong>Drive:</strong> <span>{{ car.drive }}</span></div>
-                        <div><strong>Status:</strong> <span>{{ car.status }}</span></div>
+                        <div><strong>Status:</strong> <span>{{ car.title_status }}</span></div>
                     </div>
 
                     <div class="thumbnails">
-                        <!-- Виводимо мініатюру головного фото -->
                         <img src="{{ car.main_image }}" alt="Thumb">
                     </div>
 
@@ -267,8 +317,6 @@
             </div>
             {% endfor %}
         </div>
-        <!-- КІНЕЦЬ ЦИКЛУ -->
-
         <div id="application-form" class="form-container">
             <div style="text-align: center; margin-bottom: 30px;">
                 <h2 style="font-size: 2.5rem; color: var(--accent-red);">Vehicle Application</h2>
