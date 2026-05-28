@@ -232,7 +232,6 @@
                 justify-content: center; 
             }
             
-            /* На мобільних можна зробити трохи меншими, щоб поміщалося */
             .logo-icon { height: 50px; }
             .logo-text { height: 35px; }
 
@@ -251,6 +250,9 @@
             .form-container { padding: 25px; }
         }
     </style>
+
+    <!-- Підключення Netlify Identity для реєстрації -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
@@ -374,5 +376,17 @@
         <p style="color: #555; font-size: 0.8rem;">&copy; 2026 THROTTLE FINDS. ALL RIGHTS RESERVED.</p>
     </footer>
 
+    <!-- Додаємо логіку, щоб після логіну сайт розумів, що треба робити -->
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
 </body>
 </html>
