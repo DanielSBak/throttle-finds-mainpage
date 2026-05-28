@@ -10,7 +10,7 @@ public_folder: "images/uploads"
 collections:
   - name: "cars"
     label: "Inventory (Cars)"
-    folder: "cars" 
+    folder: "_cars" 
     create: true
     slug: "{{year}}-{{make}}-{{model}}"
     fields:
