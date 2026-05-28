@@ -1,0 +1,3 @@
+collections:
+  cars:
+    output: true
