@@ -1,0 +1,24 @@
+backend:
+  name: github
+  repo: DanielSBak/throttle-finds-mainpage
+  branch: main
+
+media_folder: "images/uploads" # Куди зберігатимуться фотографії
+public_folder: "images/uploads"
+
+collections:
+  - name: "cars"
+    label: "Inventory (Cars)"
+    folder: "cars" # У цій папці будуть зберігатися файли машин
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title (e.g. 2020 Dodge Challenger)", name: "title", widget: "string"}
+      - {label: "Price", name: "price", widget: "string"}
+      - {label: "VIN", name: "vin", widget: "string"}
+      - {label: "Mileage", name: "mileage", widget: "string"}
+      - {label: "Engine", name: "engine", widget: "string"}
+      - {label: "Transmission", name: "transmission", widget: "string"}
+      - {label: "Drive", name: "drive", widget: "string"}
+      - {label: "Status (e.g. Clean Title)", name: "status", widget: "string"}
+      - {label: "Main Image", name: "main_image", widget: "image"}
