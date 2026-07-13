@@ -5,358 +5,965 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Throttle Finds | Inventory</title>
+    <title>Throttle Finds | Performance Cars &amp; Clean Finds — Spartanburg, SC</title>
+    <meta name="description" content="Throttle Finds — hand-picked performance cars and clean finds in Spartanburg, SC. Browse current inventory and apply online.">
+    <link rel="icon" type="image/png" href="images/logo-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --bg-card: #141414;
-            --accent-red: #A62122;
-            --text-light: #f5f5f5;
-            --text-muted: #888888;
-            --border-color: #2a2a2a;
+            --bg: #08090b;
+            --bg-2: #0d0f12;
+            --red: #c22a2b;
+            --red-deep: #A62122;
+            --red-glow: rgba(194, 42, 43, 0.45);
+            --text: #f4f5f7;
+            --muted: #9aa0a8;
+            --glass-bg: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
+            --glass-border: rgba(255,255,255,0.12);
+            --glass-highlight: inset 0 1px 0 rgba(255,255,255,0.14);
+            --radius: 24px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Oswald', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-light);
-            line-height: 1.5;
-            text-transform: uppercase;
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* Шапка - 3 колонки для ідеального центрування */
+        h1, h2, h3, .display {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            line-height: 1.15;
+        }
+
+        ::selection { background: var(--red); color: #fff; }
+
+        /* ---------- Ambient background ---------- */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(900px 600px at 85% -10%, rgba(194,42,43,0.16), transparent 60%),
+                radial-gradient(700px 500px at -10% 40%, rgba(120,40,45,0.12), transparent 60%),
+                radial-gradient(800px 600px at 60% 110%, rgba(60,70,90,0.10), transparent 60%),
+                var(--bg);
+        }
+        .ambient::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.5;
+            z-index: -1;
+            pointer-events: none;
+            animation: drift 26s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 480px; height: 480px; top: -160px; right: -120px; background: radial-gradient(circle, rgba(194,42,43,0.35), transparent 70%); }
+        .orb-2 { width: 420px; height: 420px; bottom: 5%; left: -160px; background: radial-gradient(circle, rgba(160,60,80,0.22), transparent 70%); animation-delay: -12s; animation-duration: 32s; }
+        @keyframes drift {
+            0%   { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 50px) scale(1.15); }
+        }
+
+        /* ---------- Glass primitives ---------- */
+        .glass {
+            background: var(--glass-bg);
+            -webkit-backdrop-filter: blur(22px) saturate(150%);
+            backdrop-filter: blur(22px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.45), var(--glass-highlight);
+            border-radius: var(--radius);
+        }
+
+        /* ---------- Header ---------- */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 50px;
-            background: #000;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(1200px, calc(100% - 32px));
             z-index: 100;
-        }
-        
-        .header-left, .header-center, .header-right {
-            flex: 1;
-            display: flex;
-        }
-        
-        .header-left { justify-content: flex-start; align-items: center; }
-        .header-center { justify-content: center; align-items: center; }
-        .header-right { justify-content: flex-end; align-items: center; }
-
-        /* Збільшені логотипи */
-        .logo-icon { 
-            height: 70px; 
-            object-fit: contain;
-        } 
-        .logo-text { 
-            height: 45px; 
-            object-fit: contain;
-        } 
-
-        .header-socials a {
-            color: var(--text-light);
-            font-size: 1.2rem;
-            margin-left: 20px;
-            transition: color 0.3s;
-        }
-        .header-socials a:hover { color: var(--accent-red); }
-
-        /* Контейнер сторінки */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        /* Панель сортування */
-        .sort-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--bg-card);
-            padding: 15px 20px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 30px;
+            padding: 10px 22px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(20,22,26,0.65), rgba(20,22,26,0.4));
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            backdrop-filter: blur(24px) saturate(160%);
+            border: 1px solid rgba(255,255,255,0.10);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
+            transition: box-shadow 0.4s ease, background 0.4s ease;
         }
-        .sort-bar h1 { font-size: 1.5rem; letter-spacing: 1px; }
-        .sort-options select {
-            background: #000;
-            color: var(--text-light);
-            border: 1px solid var(--border-color);
-            padding: 8px 15px;
-            font-family: 'Oswald', sans-serif;
+        header.scrolled {
+            background: linear-gradient(135deg, rgba(14,15,18,0.85), rgba(14,15,18,0.65));
+            box-shadow: 0 16px 48px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10);
+        }
+
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .brand .logo-icon { height: 44px; object-fit: contain; }
+        .brand .logo-text { height: 26px; object-fit: contain; }
+
+        .nav-links { display: flex; align-items: center; gap: 6px; }
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.86rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
+            padding: 8px 14px;
+            border-radius: 999px;
+            transition: color 0.25s ease, background 0.25s ease;
+        }
+        .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.07); }
+        .nav-links a.nav-cta {
+            color: #fff;
+            white-space: nowrap;
+            background: linear-gradient(135deg, var(--red), #8f1b1c);
+            box-shadow: 0 4px 18px var(--red-glow), inset 0 1px 0 rgba(255,255,255,0.25);
+        }
+        .nav-links a.nav-cta:hover { filter: brightness(1.12); }
+
+        .header-socials { display: flex; align-items: center; gap: 4px; margin-left: 6px; }
+        .header-socials a {
+            color: var(--muted);
+            width: 36px; height: 36px;
+            display: grid; place-items: center;
+            border-radius: 50%;
+            font-size: 1rem;
+            transition: color 0.25s, background 0.25s, transform 0.25s;
+        }
+        .header-socials a:hover { color: #fff; background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            position: relative;
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 140px 20px 100px;
+            isolation: isolate;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: url('images/hero-bg.jpg') center 30% / cover no-repeat;
+            animation: heroZoom 14s ease-out forwards;
+        }
+        @keyframes heroZoom {
+            from { transform: scale(1.12); }
+            to   { transform: scale(1); }
+        }
+        .hero-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(8,9,11,0.55) 0%, rgba(8,9,11,0.25) 40%, rgba(8,9,11,0.92) 88%, var(--bg) 100%),
+                radial-gradient(70% 60% at 50% 45%, transparent 40%, rgba(8,9,11,0.5) 100%);
+        }
+
+        .hero-inner { max-width: 900px; }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #ffd9d9;
+            background: linear-gradient(135deg, rgba(194,42,43,0.25), rgba(194,42,43,0.08));
+            border: 1px solid rgba(255,120,120,0.25);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+            margin-bottom: 26px;
+        }
+        .hero-badge .dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #ff5a5a;
+            box-shadow: 0 0 12px #ff5a5a;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.75); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 8vw, 5.6rem);
+            font-weight: 600;
+            margin-bottom: 18px;
+            text-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+        .hero h1 .accent {
+            color: transparent;
+            background: linear-gradient(120deg, #ff6b6b, var(--red) 45%, #7e1516);
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 0 22px rgba(194,42,43,0.45));
+        }
+        .hero p.sub {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #c9cdd3;
+            max-width: 620px;
+            margin: 0 auto 38px;
+            font-weight: 500;
+        }
+
+        .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 34px;
+            border-radius: 999px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(.2,.9,.3,1.4), box-shadow 0.3s ease, filter 0.3s ease;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--red) 0%, #8f1b1c 100%);
+            box-shadow: 0 10px 30px var(--red-glow), inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 40px var(--red-glow), inset 0 1px 0 rgba(255,255,255,0.3); }
+        .btn-primary::after {
+            content: "";
+            position: absolute;
+            top: 0; left: -80%;
+            width: 50%; height: 100%;
+            background: linear-gradient(100deg, transparent, rgba(255,255,255,0.35), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+        }
+        .btn-primary:hover::after { left: 130%; }
+        .btn-glass {
+            color: var(--text);
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+            border-color: rgba(255,255,255,0.18);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+        }
+        .btn-glass:hover { transform: translateY(-3px); background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.07)); }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 28px; left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.55);
+            font-size: 1.3rem;
+            animation: bob 2.2s ease-in-out infinite;
+        }
+        @keyframes bob {
+            0%, 100% { transform: translate(-50%, 0); opacity: 0.5; }
+            50% { transform: translate(-50%, 10px); opacity: 1; }
+        }
+
+        /* ---------- Sections ---------- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 90px 0; }
+        #inventory, #why-us, #apply, #contact, #application-form { scroll-margin-top: 96px; }
+
+        .section-head { text-align: center; margin-bottom: 54px; }
+        .eyebrow {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 12px;
+        }
+        .section-head h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 600; }
+        .section-head p { color: var(--muted); max-width: 560px; margin: 14px auto 0; }
+
+        /* ---------- Toolbar ---------- */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 16px 22px;
+            margin-bottom: 36px;
+            border-radius: 18px;
+        }
+        .toolbar .count { color: var(--muted); font-weight: 600; font-size: 0.95rem; }
+        .toolbar .count strong { color: #fff; }
+        .select-wrap { position: relative; }
+        .select-wrap i {
+            position: absolute; right: 16px; top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+        .toolbar select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: rgba(0,0,0,0.35);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 999px;
+            padding: 11px 44px 11px 20px;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
             outline: none;
             cursor: pointer;
+            transition: border-color 0.25s;
+        }
+        .toolbar select:hover, .toolbar select:focus { border-color: rgba(255,255,255,0.3); }
+
+        /* ---------- Car cards ---------- */
+        .car-card {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+            margin-bottom: 44px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.45s cubic-bezier(.2,.8,.2,1), box-shadow 0.45s ease, border-color 0.45s ease;
+        }
+        .car-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,120,120,0.28);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.55), 0 0 60px rgba(194,42,43,0.12), var(--glass-highlight);
         }
 
-        /* Картка Машини */
-        .car-card {
-            display: flex;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            margin-bottom: 40px;
-            transition: border-color 0.3s;
-        }
-        .car-card:hover { border-color: var(--accent-red); }
-        
         .car-img-section {
-            flex: 0 0 50%;
-            border-right: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
         }
         .main-img {
+            position: absolute;
+            inset: 0;
             width: 100%;
-            aspect-ratio: 16 / 9;
+            height: 100%;
             object-fit: cover;
             display: block;
+            transition: transform 0.8s cubic-bezier(.2,.8,.2,1), opacity 0.25s ease;
+        }
+        .car-card:hover .main-img { transform: scale(1.05); }
+        .car-img-section::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 70%, rgba(10,11,13,0.5) 100%);
+            pointer-events: none;
+        }
+        .status-chip {
+            position: absolute;
+            top: 18px; left: 18px;
+            z-index: 2;
+            padding: 7px 16px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(194,42,43,0.85), rgba(126,21,22,0.85));
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.22);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
         }
 
-        .car-details {
-            flex: 1;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-        }
-        .car-title {
-            font-size: 2rem;
-            margin-bottom: 5px;
-            color: var(--text-light);
-        }
+        .car-details { padding: 34px 36px; display: flex; flex-direction: column; }
+        .car-title { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 600; margin-bottom: 6px; }
         .car-price {
-            font-size: 1.8rem;
-            color: var(--accent-red);
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.5rem, 2.4vw, 1.9rem);
             font-weight: 700;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            color: transparent;
+            background: linear-gradient(120deg, #ff7a7a, var(--red));
+            -webkit-background-clip: text;
+            background-clip: text;
+            margin-bottom: 22px;
         }
 
-        /* Характеристики */
         .specs-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-        .specs-grid span { color: var(--text-light); font-weight: 700; }
-
-        /* Міні-галерея */
-        .thumbnails {
-            display: flex;
             gap: 10px;
-            margin-top: auto;
-            margin-bottom: 25px;
+            margin-bottom: 22px;
         }
-        .thumbnails img {
-            width: 80px;
-            height: 60px;
-            object-fit: cover;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: border-color 0.3s;
+        .spec {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+            min-width: 0;
         }
-        .thumbnails img:hover { border-color: var(--accent-red); }
-
-        /* Кнопка */
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: var(--accent-red);
-            color: #fff;
-            text-decoration: none;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-align: center;
-            border: 2px solid var(--accent-red);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            width: 100%;
-        }
-        .btn:hover { background-color: transparent; color: var(--accent-red); }
-
-        /* Форма аплікації */
-        .form-container {
-            background: var(--bg-card);
-            padding: 50px;
-            border: 1px solid var(--border-color);
-            border-top: 4px solid var(--accent-red);
-            margin-top: 60px;
-        }
-        .form-group { margin-bottom: 20px; }
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            background: #000;
-            border: 1px solid var(--border-color);
-            color: var(--text-light);
-            font-family: 'Oswald', sans-serif;
+        .spec .label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
+            color: var(--muted);
         }
-        .form-group input:focus { outline: none; border-color: var(--accent-red); }
+        .spec .value {
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
-        /* Підвал */
-        footer {
-            background: #050505;
-            padding: 40px 20px;
+        .car-desc {
+            color: var(--muted);
+            font-size: 0.92rem;
+            margin-bottom: 22px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .car-desc p { margin: 0; }
+
+        .thumbnails { display: flex; gap: 10px; margin-top: auto; margin-bottom: 24px; flex-wrap: wrap; }
+        .thumbnails img {
+            width: 84px; height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+            cursor: pointer;
+            opacity: 0.75;
+            transition: opacity 0.25s, border-color 0.25s, transform 0.25s;
+        }
+        .thumbnails img:hover, .thumbnails img.active {
+            opacity: 1;
+            border-color: var(--red);
+            transform: translateY(-3px);
+        }
+
+        .empty-inventory {
             text-align: center;
-            border-top: 1px solid #222;
+            padding: 70px 30px;
+            color: var(--muted);
         }
-        .social-links { margin-top: 15px; margin-bottom: 10px; }
+        .empty-inventory i { font-size: 2.2rem; color: var(--red); margin-bottom: 16px; display: block; }
+
+        /* ---------- Features ---------- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+        .feature {
+            padding: 34px 28px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(.2,.8,.2,1), border-color 0.4s;
+        }
+        .feature:hover { transform: translateY(-6px); border-color: rgba(255,120,120,0.25); }
+        .feature .icon {
+            width: 56px; height: 56px;
+            display: grid; place-items: center;
+            border-radius: 18px;
+            font-size: 1.3rem;
+            color: #ffb3b3;
+            background: linear-gradient(135deg, rgba(194,42,43,0.3), rgba(194,42,43,0.08));
+            border: 1px solid rgba(255,120,120,0.25);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 24px rgba(194,42,43,0.15);
+            margin-bottom: 20px;
+        }
+        .feature h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; }
+        .feature p { color: var(--muted); font-size: 0.92rem; }
+
+        /* ---------- Application form ---------- */
+        .form-shell {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 54px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-shell::before {
+            content: "";
+            position: absolute;
+            top: -120px; right: -120px;
+            width: 300px; height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(194,42,43,0.25), transparent 70%);
+            pointer-events: none;
+        }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 15px 18px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            color: var(--text);
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.95rem;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+            transition: border-color 0.25s, box-shadow 0.25s;
+            resize: vertical;
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #5f656d; }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(194,42,43,0.18), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .form-note {
+            display: none;
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            color: #ffd9d9;
+            background: rgba(194,42,43,0.14);
+            border: 1px solid rgba(255,120,120,0.3);
+        }
+        .form-note.show { display: block; }
+        .form-note a { color: #fff; font-weight: 700; }
+
+        /* ---------- Contact / footer ---------- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+        .contact-card {
+            padding: 30px 26px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.4s cubic-bezier(.2,.8,.2,1), border-color 0.4s;
+        }
+        .contact-card:hover { transform: translateY(-6px); border-color: rgba(255,120,120,0.25); }
+        .contact-card i { font-size: 1.5rem; color: var(--red); margin-bottom: 12px; display: block; }
+        .contact-card .label {
+            font-size: 0.72rem; font-weight: 800;
+            letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--muted); display: block; margin-bottom: 6px;
+        }
+        .contact-card .value { font-weight: 700; font-size: 1rem; }
+
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.5));
+            padding: 46px 20px 34px;
+            text-align: center;
+        }
+        footer .logo-text { height: 30px; object-fit: contain; margin-bottom: 18px; }
+        .social-links { margin: 6px 0 18px; }
         .social-links a {
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            margin: 0 15px;
-            transition: color 0.3s ease;
+            display: inline-grid;
+            place-items: center;
+            width: 46px; height: 46px;
+            margin: 0 6px;
+            border-radius: 50%;
+            color: var(--muted);
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: color 0.3s, transform 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
-        .social-links a:hover { color: var(--accent-red); }
+        .social-links a:hover {
+            color: #fff;
+            transform: translateY(-4px);
+            border-color: rgba(255,120,120,0.4);
+            box-shadow: 0 10px 25px rgba(194,42,43,0.25);
+        }
+        footer .fineprint { color: #565c64; font-size: 0.8rem; margin-top: 8px; }
 
-        /* Адаптивність для телефонів */
-        @media (max-width: 768px) {
-            header { 
-                flex-direction: column; 
-                gap: 15px; 
-                padding: 15px 20px; 
-            }
-            .header-left, .header-center, .header-right { 
-                width: 100%; 
-                justify-content: center; 
-            }
-            
-            .logo-icon { height: 50px; }
-            .logo-text { height: 35px; }
+        /* ---------- Scroll reveal ---------- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(34px);
+            transition: opacity 0.8s cubic-bezier(.2,.7,.2,1), transform 0.8s cubic-bezier(.2,.7,.2,1);
+            transition-delay: var(--d, 0s);
+        }
+        .reveal.visible { opacity: 1; transform: none; }
 
-            .header-socials a { margin: 0 10px; }
-            
-            .sort-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .sort-options { width: 100%; }
-            .sort-options select { width: 100%; }
-            
-            .car-card { flex-direction: column; }
-            .car-img-section { border-right: none; border-bottom: 1px solid var(--border-color); }
-            .car-details { padding: 20px; }
-            
-            .specs-grid { grid-template-columns: 1fr; }
-            .thumbnails img { width: 60px; height: 45px; }
-            .form-container { padding: 25px; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .reveal { opacity: 1; transform: none; }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 960px) {
+            .features-grid, .contact-grid { grid-template-columns: 1fr; }
+            .car-card { grid-template-columns: 1fr; }
+            .car-img-section { min-height: 0; aspect-ratio: 16 / 9; position: relative; }
+        }
+        @media (max-width: 640px) {
+            .nav-links a:not(.nav-cta) { display: none; }
+            .nav-links a.nav-cta { padding: 9px 16px; font-size: 0.8rem; }
+            .header-socials { display: none; }
+            .brand .logo-text { height: 20px; }
+            .brand .logo-icon { display: none; }
+            section { padding: 64px 0; }
+            .car-details { padding: 24px 20px; }
+            .specs-grid { grid-template-columns: 1fr 1fr; }
+            .form-shell { padding: 34px 22px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar select { width: 100%; }
         }
     </style>
-
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <img src="images/logo-icon.png" alt="Icon" class="logo-icon">
-        </div>
-        
-        <div class="header-center">
-            <img src="images/logo-text.png" alt="Throttle Finds" class="logo-text">
-        </div>
+    <div class="ambient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
-        <div class="header-right">
+    <header id="site-header">
+        <a class="brand" href="#top">
+            <img src="images/logo-icon.png" alt="Throttle Finds icon" class="logo-icon">
+            <img src="images/logo-text.png" alt="Throttle Finds" class="logo-text">
+        </a>
+        <nav class="nav-links">
+            <a href="#inventory">Inventory</a>
+            <a href="#why-us">Why Us</a>
+            <a href="#contact">Contact</a>
+            <a href="#application-form" class="nav-cta">Apply Now</a>
             <div class="header-socials">
-                <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.instagram.com/throttlefinds/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/throttlefinds/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             </div>
-        </div>
+        </nav>
     </header>
 
-    <main class="container">
-        
-        <div class="sort-bar">
-            <h1>Current Inventory</h1>
-            <div class="sort-options">
-                <select>
-                    <option value="newest">Sort By: Newest Arrivals</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="mileage">Mileage: Lowest First</option>
-                </select>
+    <section class="hero" id="top">
+        <div class="hero-bg"></div>
+        <div class="hero-inner">
+            <div class="hero-badge reveal"><span class="dot"></span> Spartanburg, South Carolina</div>
+            <h1 class="reveal" style="--d:.1s">Find Your Next <span class="accent">Machine</span></h1>
+            <p class="sub reveal" style="--d:.2s">Hand-picked performance cars and clean finds. Inspected, road-tested and ready for a new driveway.</p>
+            <div class="hero-actions reveal" style="--d:.3s">
+                <a href="#inventory" class="btn btn-primary"><i class="fas fa-gauge-high"></i> View Inventory</a>
+                <a href="#application-form" class="btn btn-glass"><i class="fas fa-file-signature"></i> Apply Online</a>
             </div>
         </div>
+        <a href="#inventory" class="scroll-hint" aria-label="Scroll to inventory"><i class="fas fa-chevron-down"></i></a>
+    </section>
 
-        <div id="dynamic-inventory">
-            {% for car in site.cars %}
-            <div class="car-card">
-                <div class="car-img-section">
-                    <img src="{{ car.main_image }}" alt="{{ car.make }} {{ car.model }}" class="main-img">
-                </div>
-                <div class="car-details">
-                    <h2 class="car-title">{{ car.year }} {{ car.make }} {{ car.model }}</h2>
-                    <div class="car-price">${{ car.price }}</div>
-                    
-                    <div class="specs-grid">
-                        <div><strong>VIN:</strong> <span>{{ car.vin }}</span></div>
-                        <div><strong>Mileage:</strong> <span>{{ car.mileage }} mi</span></div>
-                        <div><strong>Engine:</strong> <span>{{ car.engine }}</span></div>
-                        <div><strong>Transmission:</strong> <span>{{ car.transmission }}</span></div>
-                        <div><strong>Drive:</strong> <span>{{ car.drive }}</span></div>
-                        <div><strong>Status:</strong> <span>{{ car.title_status }}</span></div>
-                    </div>
+    <section id="inventory">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="eyebrow">Fresh off the trailer</span>
+                <h2>Current Inventory</h2>
+                <p>Every car gets a shakedown before it hits this page. What you see is what pulls up.</p>
+            </div>
 
-                    <div class="thumbnails">
-                        <img src="{{ car.main_image }}" alt="Thumb">
-                    </div>
-
-                    <a href="#application-form" class="btn">Apply For This Vehicle</a>
+            <div class="toolbar glass reveal">
+                <div class="count"><i class="fas fa-car" style="color: var(--red); margin-right: 8px;"></i><strong id="car-count">0</strong>&nbsp;vehicles available</div>
+                <div class="select-wrap">
+                    <select id="sort-select" aria-label="Sort inventory">
+                        <option value="newest">Sort by: Newest Arrivals</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="mileage">Mileage: Lowest First</option>
+                    </select>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        <div id="application-form" class="form-container">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h2 style="font-size: 2.5rem; color: var(--accent-red);">Vehicle Application</h2>
-                <p style="color: var(--text-muted);">Fill out the form below to start the purchase process or request a custom build.</p>
-            </div>
-            
-            <form action="YOUR_FORMSPREE_LINK_HERE" method="POST" style="max-width: 600px; margin: 0 auto;">
-                <div class="form-group"> <input type="text" name="Name" placeholder="Full Name" required> </div>
-                <div class="form-group"> <input type="text" name="Contact" placeholder="Phone Number or Email" required> </div>
-                <div class="form-group"> <input type="text" name="Vehicle_Interest" placeholder="Which vehicle are you interested in?" required> </div>
-                <div class="form-group"> <input type="text" name="Message" placeholder="Any specific questions? (Optional)"> </div>
-                <button type="submit" class="btn">Submit Application</button>
-            </form>
-        </div>
 
-    </main>
+            <div id="dynamic-inventory">
+                {% assign cars = site.cars | reverse %}
+                {% for car in cars %}
+                <div class="car-card glass reveal" data-price="{{ car.price }}" data-mileage="{{ car.mileage }}" data-index="{{ forloop.index }}">
+                    <div class="car-img-section">
+                        <span class="status-chip">{{ car.title_status }}</span>
+                        <img src="{{ car.main_image }}" alt="{{ car.year }} {{ car.make }} {{ car.model }}" class="main-img" loading="lazy">
+                    </div>
+                    <div class="car-details">
+                        <h3 class="car-title">{{ car.year }} {{ car.make }} {{ car.model }}</h3>
+                        <div class="car-price" data-price="{{ car.price }}">${{ car.price }}</div>
+
+                        <div class="specs-grid">
+                            <div class="spec"><span class="label">Mileage</span><span class="value" data-mileage="{{ car.mileage }}">{{ car.mileage }} mi</span></div>
+                            <div class="spec"><span class="label">Engine</span><span class="value">{{ car.engine }}</span></div>
+                            <div class="spec"><span class="label">Transmission</span><span class="value">{{ car.transmission }}</span></div>
+                            <div class="spec"><span class="label">Drivetrain</span><span class="value">{{ car.drive }}</span></div>
+                            {% if car.exterior_color %}<div class="spec"><span class="label">Exterior</span><span class="value">{{ car.exterior_color }}</span></div>{% endif %}
+                            <div class="spec"><span class="label">VIN</span><span class="value">{{ car.vin }}</span></div>
+                        </div>
+
+                        {% if car.content != "" %}
+                        <div class="car-desc">{{ car.content }}</div>
+                        {% endif %}
+
+                        <div class="thumbnails">
+                            <img src="{{ car.main_image }}" alt="Photo of {{ car.make }} {{ car.model }}" class="active" loading="lazy">
+                            {% for image in car.gallery %}
+                            <img src="{{ image }}" alt="Photo of {{ car.make }} {{ car.model }}" loading="lazy">
+                            {% endfor %}
+                        </div>
+
+                        <a href="#application-form" class="btn btn-primary apply-btn" data-car="{{ car.year }} {{ car.make }} {{ car.model }}"><i class="fas fa-key"></i> Apply For This Vehicle</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% if site.cars.size == 0 %}
+                <div class="empty-inventory glass">
+                    <i class="fas fa-flag-checkered"></i>
+                    <h3 style="margin-bottom: 8px;">Fresh stock incoming</h3>
+                    <p>New arrivals are being prepped right now. Follow us on Instagram to see them first.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section id="why-us">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="eyebrow">The Throttle Finds way</span>
+                <h2>Why Buy From Us</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature glass reveal">
+                    <div class="icon"><i class="fas fa-wrench"></i></div>
+                    <h3>Inspected &amp; Road-Tested</h3>
+                    <p>Every car is gone through by hand and driven before it's listed. No surprises after the handshake.</p>
+                </div>
+                <div class="feature glass reveal" style="--d:.12s">
+                    <div class="icon"><i class="fas fa-eye"></i></div>
+                    <h3>Full Transparency</h3>
+                    <p>Title status, mileage and mechanic notes up front on every listing. Ask anything — we'll show you.</p>
+                </div>
+                <div class="feature glass reveal" style="--d:.24s">
+                    <div class="icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Fast &amp; Simple Deals</h3>
+                    <p>Apply online in a minute, get a call back the same day. Paperwork handled quick so you can drive.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="apply">
+        <div class="container">
+            <div class="form-shell glass reveal" id="application-form">
+                <div class="section-head" style="margin-bottom: 34px;">
+                    <span class="eyebrow">Start your engine</span>
+                    <h2>Vehicle Application</h2>
+                    <p>Fill out the form below to start the purchase process or request a custom build.</p>
+                </div>
+
+                <form id="apply-form" action="YOUR_FORMSPREE_LINK_HERE" method="POST">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="f-name">Full Name</label>
+                            <input type="text" id="f-name" name="Name" placeholder="John Doe" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="f-contact">Phone or Email</label>
+                            <input type="text" id="f-contact" name="Contact" placeholder="(864) 000-0000" required>
+                        </div>
+                        <div class="form-group full">
+                            <label for="f-vehicle">Vehicle of Interest</label>
+                            <input type="text" id="f-vehicle" name="Vehicle_Interest" placeholder="Which vehicle are you interested in?" required>
+                        </div>
+                        <div class="form-group full">
+                            <label for="f-message">Message <span style="text-transform:none; letter-spacing:0; font-weight:600;">(optional)</span></label>
+                            <textarea id="f-message" name="Message" rows="3" placeholder="Any specific questions?"></textarea>
+                        </div>
+                        <div class="form-group full">
+                            <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-paper-plane"></i> Submit Application</button>
+                        </div>
+                    </div>
+                    <div class="form-note" id="form-note">
+                        Online applications are almost ready. In the meantime, call us at <a href="tel:+18642703379">(864)&nbsp;270-3379</a> or DM us on <a href="https://www.instagram.com/throttlefinds/" target="_blank" rel="noopener">Instagram</a> — we answer fast.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="padding-top: 0;">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="eyebrow">Come see the cars</span>
+                <h2>Find Us</h2>
+            </div>
+            <div class="contact-grid">
+                <a class="contact-card glass reveal" href="https://maps.google.com/?q=860+W+Main+St+Ste+B,+Spartanburg,+SC+29301" target="_blank" rel="noopener">
+                    <i class="fas fa-location-dot"></i>
+                    <span class="label">Location</span>
+                    <span class="value">860 W Main St Ste B, Spartanburg, SC 29301</span>
+                </a>
+                <a class="contact-card glass reveal" style="--d:.12s" href="tel:+18642703379">
+                    <i class="fas fa-phone"></i>
+                    <span class="label">Call or Text</span>
+                    <span class="value">(864) 270-3379</span>
+                </a>
+                <a class="contact-card glass reveal" style="--d:.24s" href="https://www.instagram.com/throttlefinds/" target="_blank" rel="noopener">
+                    <i class="fab fa-instagram"></i>
+                    <span class="label">Instagram</span>
+                    <span class="value">@throttlefinds</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
     <footer>
-        <h2 style="color: var(--text-light); letter-spacing: 2px;">THROTTLE FINDS</h2>
-        <div style="color: var(--text-muted); margin-top: 10px;">
-            <p>860 W MAIN ST STE B, SPARTANBURG, SC 29301</p>
-            <p>(864) 270-3379</p>
-        </div>
+        <img src="images/logo-text.png" alt="Throttle Finds" class="logo-text">
         <div class="social-links">
-            <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.instagram.com/throttlefinds/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/throttlefinds/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
-        <p style="color: #555; font-size: 0.8rem;">&copy; 2026 THROTTLE FINDS. ALL RIGHTS RESERVED.</p>
+        <p class="fineprint">860 W Main St Ste B, Spartanburg, SC 29301 &middot; (864) 270-3379</p>
+        <p class="fineprint">&copy; 2026 Throttle Finds. All rights reserved.</p>
     </footer>
 
     <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
+        // Header shadow on scroll
+        const header = document.getElementById('site-header');
+        addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 40), { passive: true });
+
+        // Scroll reveal
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
             });
-          }
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        // Number formatting (prices & mileage)
+        document.querySelectorAll('.car-price[data-price]').forEach(el => {
+            const n = parseFloat(el.dataset.price);
+            if (!isNaN(n)) el.textContent = '$' + n.toLocaleString('en-US');
         });
-      }
+        document.querySelectorAll('.value[data-mileage]').forEach(el => {
+            const n = parseFloat(el.dataset.mileage);
+            if (!isNaN(n)) el.textContent = n.toLocaleString('en-US') + ' mi';
+        });
+
+        // Vehicle count
+        const cards = () => Array.from(document.querySelectorAll('.car-card'));
+        const countEl = document.getElementById('car-count');
+        if (countEl) countEl.textContent = cards().length;
+
+        // Sorting
+        const sortSelect = document.getElementById('sort-select');
+        const inventory = document.getElementById('dynamic-inventory');
+        if (sortSelect && inventory) {
+            sortSelect.addEventListener('change', () => {
+                const mode = sortSelect.value;
+                const sorted = cards().sort((a, b) => {
+                    const pa = parseFloat(a.dataset.price) || 0, pb = parseFloat(b.dataset.price) || 0;
+                    const ma = parseFloat(a.dataset.mileage) || 0, mb = parseFloat(b.dataset.mileage) || 0;
+                    const ia = parseInt(a.dataset.index) || 0, ib = parseInt(b.dataset.index) || 0;
+                    switch (mode) {
+                        case 'price-low': return pa - pb;
+                        case 'price-high': return pb - pa;
+                        case 'mileage': return ma - mb;
+                        default: return ia - ib;
+                    }
+                });
+                sorted.forEach(card => inventory.appendChild(card));
+            });
+        }
+
+        // Thumbnail gallery swap
+        document.querySelectorAll('.car-card').forEach(card => {
+            const mainImg = card.querySelector('.main-img');
+            card.querySelectorAll('.thumbnails img').forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    if (mainImg.src === thumb.src) return;
+                    card.querySelectorAll('.thumbnails img').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                    mainImg.style.opacity = 0;
+                    setTimeout(() => { mainImg.src = thumb.src; mainImg.style.opacity = 1; }, 220);
+                });
+            });
+        });
+
+        // Prefill "vehicle of interest" from card buttons
+        document.querySelectorAll('.apply-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = document.getElementById('f-vehicle');
+                if (input && btn.dataset.car) input.value = btn.dataset.car;
+            });
+        });
+
+        // Graceful fallback while the form backend isn't connected yet
+        const applyForm = document.getElementById('apply-form');
+        if (applyForm && applyForm.getAttribute('action').includes('YOUR_FORMSPREE')) {
+            applyForm.addEventListener('submit', e => {
+                e.preventDefault();
+                document.getElementById('form-note').classList.add('show');
+            });
+        }
+
+        // Netlify CMS login redirect
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
