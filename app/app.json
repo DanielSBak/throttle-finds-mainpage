@@ -27,6 +27,12 @@
         }
       ],
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d01b3e7d-fd4e-4e9b-bb7f-1f6848981770"
+      }
+    },
+    "owner": "danielbak"
   }
 }
