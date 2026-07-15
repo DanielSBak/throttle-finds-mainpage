@@ -9,16 +9,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "expo": "~53.0.0",
-    "expo-image-manipulator": "~13.1.5",
-    "expo-image-picker": "~16.1.4",
-    "expo-secure-store": "~14.2.3",
-    "expo-status-bar": "~2.2.3",
-    "react": "19.0.0",
-    "react-native": "0.79.5"
+    "expo": "^54.0.36",
+    "expo-image-manipulator": "~14.0.8",
+    "expo-image-picker": "~17.0.11",
+    "expo-secure-store": "~15.0.8",
+    "expo-status-bar": "~3.0.9",
+    "react": "19.1.0",
+    "react-native": "0.81.5"
   },
   "devDependencies": {
-    "@types/react": "~19.0.10",
-    "typescript": "~5.8.3"
+    "@types/react": "~19.1.0",
+    "typescript": "~5.9.2"
   }
 }
