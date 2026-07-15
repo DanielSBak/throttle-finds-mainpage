@@ -13,8 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
     <style>
         :root {
             --bg: #08090b;
@@ -395,6 +393,27 @@
             background: linear-gradient(90deg, transparent 70%, rgba(10,11,13,0.5) 100%);
             pointer-events: none;
         }
+        .car-card.sold .main-img, .car-card.sold .thumbnails img { filter: grayscale(0.75) brightness(0.8); }
+        .car-card.sold:hover { border-color: rgba(255,255,255,0.18); box-shadow: 0 30px 70px rgba(0,0,0,0.55), var(--glass-highlight); }
+        .sold-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 34px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: rgba(255,255,255,0.04);
+            border: 1px dashed rgba(255,255,255,0.18);
+        }
+        .status-chip.sold-chip {
+            background: linear-gradient(135deg, rgba(45,47,52,0.9), rgba(18,19,21,0.9));
+            border-color: rgba(255,255,255,0.18);
+        }
         .status-chip {
             position: absolute;
             top: 18px; left: 18px;
@@ -728,9 +747,9 @@
             <div id="dynamic-inventory">
                 {% assign cars = site.cars | reverse %}
                 {% for car in cars %}
-                <div class="car-card glass reveal" data-price="{{ car.price }}" data-mileage="{{ car.mileage }}" data-index="{{ forloop.index }}">
+                <div class="car-card glass reveal{% if car.sold %} sold{% endif %}" data-price="{{ car.price }}" data-mileage="{{ car.mileage }}" data-index="{{ forloop.index }}" data-sold="{{ car.sold | default: false }}">
                     <div class="car-img-section">
-                        <span class="status-chip">{{ car.title_status }}</span>
+                        {% if car.sold %}<span class="status-chip sold-chip"><i class="fas fa-flag-checkered"></i>&nbsp; Sold</span>{% else %}<span class="status-chip">{{ car.title_status }}</span>{% endif %}
                         <img src="{{ car.main_image }}" alt="{{ car.year }} {{ car.make }} {{ car.model }}" class="main-img" loading="lazy">
                     </div>
                     <div class="car-details">
@@ -757,7 +776,11 @@
                             {% endfor %}
                         </div>
 
+                        {% if car.sold %}
+                        <div class="sold-note"><i class="fas fa-flag-checkered"></i> This one found a new home</div>
+                        {% else %}
                         <a href="#application-form" class="btn btn-primary apply-btn" data-car="{{ car.year }} {{ car.make }} {{ car.model }}"><i class="fas fa-key"></i> Apply For This Vehicle</a>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
@@ -897,10 +920,10 @@
             if (!isNaN(n)) el.textContent = n.toLocaleString('en-US') + ' mi';
         });
 
-        // Vehicle count
+        // Vehicle count (available cars only)
         const cards = () => Array.from(document.querySelectorAll('.car-card'));
         const countEl = document.getElementById('car-count');
-        if (countEl) countEl.textContent = cards().length;
+        if (countEl) countEl.textContent = cards().filter(c => c.dataset.sold !== 'true').length;
 
         // Sorting
         const sortSelect = document.getElementById('sort-select');
@@ -909,6 +932,8 @@
             sortSelect.addEventListener('change', () => {
                 const mode = sortSelect.value;
                 const sorted = cards().sort((a, b) => {
+                    const sa = a.dataset.sold === 'true' ? 1 : 0, sb = b.dataset.sold === 'true' ? 1 : 0;
+                    if (sa !== sb) return sa - sb; // sold cars always sink to the bottom
                     const pa = parseFloat(a.dataset.price) || 0, pb = parseFloat(b.dataset.price) || 0;
                     const ma = parseFloat(a.dataset.mileage) || 0, mb = parseFloat(b.dataset.mileage) || 0;
                     const ia = parseInt(a.dataset.index) || 0, ib = parseInt(b.dataset.index) || 0;
@@ -921,6 +946,7 @@
                 });
                 sorted.forEach(card => inventory.appendChild(card));
             });
+            sortSelect.dispatchEvent(new Event('change')); // initial pass sinks sold cars
         }
 
         // Thumbnail gallery swap
@@ -951,17 +977,6 @@
             applyForm.addEventListener('submit', e => {
                 e.preventDefault();
                 document.getElementById('form-note').classList.add('show');
-            });
-        }
-
-        // Netlify CMS login redirect
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
-                }
             });
         }
     </script>

@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Throttle Finds",
+    "slug": "throttle-finds",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0d0f12",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0d0f12"
+    },
+    "ios": {
+      "bundleIdentifier": "com.throttlefinds.inventory",
+      "supportsTablet": false,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app needs access to your photos so you can add pictures of cars to the website."
+        }
+      ],
+      "expo-secure-store"
+    ]
+  }
+}
