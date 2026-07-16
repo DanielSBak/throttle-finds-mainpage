@@ -11,7 +11,7 @@ transmission: "manual"
 drive: "FWD"
 exterior_color: "Pink"
 interior_color: "Yellow"
-title_status: "Bill of Sale"
+title_status: "Clean Title"
 sold: false
 main_image: "images/uploads/pink-raketa.png"
 gallery:
