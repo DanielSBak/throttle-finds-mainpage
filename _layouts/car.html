@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% capture cartitle %}{{ page.year }} {{ page.make }} {{ page.model }}{% endcapture %}
+    <title>{{ cartitle }} for Sale in Spartanburg, SC | Throttle Finds</title>
+    <meta name="description" content="{{ cartitle }} for sale at Throttle Finds in Spartanburg, SC — ${{ page.price }}, {{ page.mileage }} miles, {{ page.title_status }}.{% if page.sold %} SOLD.{% endif %} Call (864) 270-3379.">
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+    <link rel="icon" type="image/png" href="/images/logo-icon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Throttle Finds">
+    <meta property="og:title" content="{{ cartitle }} — ${{ page.price }}">
+    <meta property="og:description" content="{{ page.mileage }} miles · {{ page.title_status }} · Spartanburg, SC{% if page.sold %} · SOLD{% endif %}">
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+    <meta property="og:image" content="{{ site.url }}/{{ page.main_image }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Car",
+      "name": "{{ cartitle }}",
+      "brand": { "@type": "Brand", "name": "{{ page.make }}" },
+      "model": "{{ page.model }}",
+      "vehicleModelDate": "{{ page.year }}",
+      "mileageFromOdometer": { "@type": "QuantitativeValue", "value": "{{ page.mileage }}", "unitCode": "SMI" },
+      {% if page.vin and page.vin != "" and page.vin != "?" %}"vehicleIdentificationNumber": "{{ page.vin }}",{% endif %}
+      {% if page.exterior_color and page.exterior_color != "" %}"color": "{{ page.exterior_color }}",{% endif %}
+      {% if page.fuel and page.fuel != "" %}"fuelType": "{{ page.fuel }}",{% endif %}
+      {% if page.transmission and page.transmission != "" %}"vehicleTransmission": "{{ page.transmission }}",{% endif %}
+      {% if page.drive and page.drive != "" %}"driveWheelConfiguration": "{{ page.drive }}",{% endif %}
+      "image": [
+        "{{ site.url }}/{{ page.main_image }}"{% for image in page.gallery %},
+        "{{ site.url }}/{{ image }}"{% endfor %}
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "{{ page.price }}",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/{% if page.sold %}SoldOut{% else %}InStock{% endif %}",
+        "url": "{{ site.url }}{{ page.url }}",
+        "seller": {
+          "@type": "AutoDealer",
+          "name": "Throttle Finds",
+          "telephone": "+1-864-270-3379",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "860 W Main St Ste B",
+            "addressLocality": "Spartanburg",
+            "addressRegion": "SC",
+            "postalCode": "29301",
+            "addressCountry": "US"
+          }
+        }
+      }
+    }
+    </script>
+</head>
+<body{% if page.sold %} class="sold-page"{% endif %}>
+
+    <div class="ambient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    {% include header.html %}
+
+    <main class="container car-page">
+        <a href="/#inventory" class="breadcrumb"><i class="fas fa-arrow-left"></i> Back to Inventory</a>
+
+        <div class="car-layout">
+            <div class="gallery">
+                <div class="gallery-main" id="gallery-main">
+                    <img src="/{{ page.main_image }}" alt="{{ cartitle }}" id="gallery-main-img">
+                    <span class="expand-hint"><i class="fas fa-expand"></i></span>
+                </div>
+                <div class="gallery-thumbs" id="gallery-thumbs">
+                    <img src="/{{ page.main_image }}" alt="{{ cartitle }} photo 1" class="active" loading="lazy">
+                    {% for image in page.gallery %}
+                    <img src="/{{ image }}" alt="{{ cartitle }} photo {{ forloop.index | plus: 1 }}" loading="lazy">
+                    {% endfor %}
+                </div>
+            </div>
+
+            <aside class="car-info glass">
+                <h1>{{ cartitle }}</h1>
+                <div class="car-price" data-price="{{ page.price }}">${{ page.price }}</div>
+
+                <div class="info-chips">
+                    {% if page.sold %}
+                    <span class="info-chip gray"><i class="fas fa-flag-checkered"></i>&nbsp; Sold</span>
+                    {% else %}
+                    <span class="info-chip">Available Now</span>
+                    {% endif %}
+                    <span class="info-chip gray">{{ page.title_status }}</span>
+                </div>
+
+                <div class="specs-grid">
+                    <div class="spec"><span class="label">Mileage</span><span class="value" data-mileage="{{ page.mileage }}">{{ page.mileage }} mi</span></div>
+                    {% if page.engine and page.engine != "" %}<div class="spec"><span class="label">Engine</span><span class="value">{{ page.engine }}</span></div>{% endif %}
+                    {% if page.transmission and page.transmission != "" %}<div class="spec"><span class="label">Transmission</span><span class="value">{{ page.transmission }}</span></div>{% endif %}
+                    {% if page.drive and page.drive != "" %}<div class="spec"><span class="label">Drivetrain</span><span class="value">{{ page.drive }}</span></div>{% endif %}
+                    {% if page.fuel and page.fuel != "" %}<div class="spec"><span class="label">Fuel</span><span class="value">{{ page.fuel }}</span></div>{% endif %}
+                    {% if page.exterior_color and page.exterior_color != "" %}<div class="spec"><span class="label">Exterior</span><span class="value">{{ page.exterior_color }}</span></div>{% endif %}
+                    {% if page.interior_color and page.interior_color != "" %}<div class="spec"><span class="label">Interior</span><span class="value">{{ page.interior_color }}</span></div>{% endif %}
+                    {% if page.vin and page.vin != "" and page.vin != "?" %}<div class="spec"><span class="label">VIN</span><span class="value">{{ page.vin }}</span></div>{% endif %}
+                </div>
+
+                <div class="cta-stack">
+                    {% if page.sold %}
+                    <div class="sold-note"><i class="fas fa-flag-checkered"></i> This one found a new home</div>
+                    <a href="/#inventory" class="btn btn-glass"><i class="fas fa-car"></i> See What's Available</a>
+                    {% else %}
+                    <a href="/?vehicle={{ cartitle | url_encode }}#application-form" class="btn btn-primary"><i class="fas fa-key"></i> Apply For This Vehicle</a>
+                    <a href="tel:+18642703379" class="btn btn-glass"><i class="fas fa-phone"></i> Call (864) 270-3379</a>
+                    {% endif %}
+                </div>
+            </aside>
+        </div>
+
+        {% if content and content != "" %}
+        <div class="desc-section">
+            <div class="desc-card glass">
+                <h2>About This Vehicle</h2>
+                {{ content }}
+            </div>
+        </div>
+        {% endif %}
+
+        {% assign others = site.cars | where_exp: "c", "c.url != page.url" | where_exp: "c", "c.sold != true" | reverse %}
+        {% if others.size > 0 %}
+        <div class="more-lot">
+            <h2>More From The Lot</h2>
+            <div class="mini-grid">
+                {% for car in others limit: 3 %}
+                <a class="mini-card glass" href="{{ car.url }}">
+                    <img src="/{{ car.main_image }}" alt="{{ car.year }} {{ car.make }} {{ car.model }}" loading="lazy">
+                    <div class="pad">
+                        <div class="mini-title">{{ car.year }} {{ car.make }} {{ car.model }}</div>
+                        <div class="mini-price" data-price="{{ car.price }}">${{ car.price }}</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    {% include footer.html %}
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Photo viewer">
+        <button class="lb-btn lb-close" id="lb-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
+        <button class="lb-btn lb-prev" id="lb-prev" aria-label="Previous photo"><i class="fas fa-chevron-left"></i></button>
+        <img src="" alt="Photo" id="lb-img">
+        <button class="lb-btn lb-next" id="lb-next" aria-label="Next photo"><i class="fas fa-chevron-right"></i></button>
+        <div class="lb-count" id="lb-count"></div>
+    </div>
+
+    <script>
+        // Format price and mileage with thousands separators
+        document.querySelectorAll('[data-price]').forEach(el => {
+            const n = parseFloat(el.dataset.price);
+            if (!isNaN(n)) el.textContent = '$' + n.toLocaleString('en-US');
+        });
+        document.querySelectorAll('[data-mileage]').forEach(el => {
+            const n = parseFloat(el.dataset.mileage);
+            if (!isNaN(n)) el.textContent = n.toLocaleString('en-US') + ' mi';
+        });
+
+        const photos = Array.from(document.querySelectorAll('#gallery-thumbs img')).map(t => t.src);
+        const mainImg = document.getElementById('gallery-main-img');
+        const thumbs = Array.from(document.querySelectorAll('#gallery-thumbs img'));
+        let current = 0;
+
+        function setMain(index) {
+            current = index;
+            thumbs.forEach((t, i) => t.classList.toggle('active', i === index));
+            mainImg.style.opacity = 0;
+            setTimeout(() => { mainImg.src = photos[index]; mainImg.style.opacity = 1; }, 180);
+        }
+        thumbs.forEach((t, i) => t.addEventListener('click', () => setMain(i)));
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lb-img');
+        const lbCount = document.getElementById('lb-count');
+
+        function openLightbox(index) {
+            current = index;
+            renderLb();
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lightbox.classList.remove('open');
+            document.body.style.overflow = '';
+            setMain(current);
+        }
+        function renderLb() {
+            lbImg.src = photos[current];
+            lbCount.textContent = (current + 1) + ' / ' + photos.length;
+        }
+        function step(delta) {
+            current = (current + delta + photos.length) % photos.length;
+            renderLb();
+        }
+
+        document.getElementById('gallery-main').addEventListener('click', () => openLightbox(current));
+        document.getElementById('lb-close').addEventListener('click', closeLightbox);
+        document.getElementById('lb-prev').addEventListener('click', e => { e.stopPropagation(); step(-1); });
+        document.getElementById('lb-next').addEventListener('click', e => { e.stopPropagation(); step(1); });
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+        document.addEventListener('keydown', e => {
+            if (!lightbox.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') step(-1);
+            if (e.key === 'ArrowRight') step(1);
+        });
+
+        // Swipe support on touch screens
+        let touchX = null;
+        lightbox.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+        lightbox.addEventListener('touchend', e => {
+            if (touchX === null) return;
+            const dx = e.changedTouches[0].clientX - touchX;
+            if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+            touchX = null;
+        }, { passive: true });
+    </script>
+</body>
+</html>

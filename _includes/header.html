@@ -1,0 +1,22 @@
+<header id="site-header">
+    <a class="brand" href="/">
+        <img src="/images/logo-icon.png" alt="Throttle Finds icon" class="logo-icon">
+        <img src="/images/logo-text.png" alt="Throttle Finds" class="logo-text">
+    </a>
+    <nav class="nav-links">
+        <a href="/#inventory">Inventory</a>
+        <a href="/#why-us">Why Us</a>
+        <a href="/#contact">Contact</a>
+        <a href="/#application-form" class="nav-cta">Apply Now</a>
+        <div class="header-socials">
+            <a href="https://www.facebook.com/marketplace/profile/100092179225766/?ref=permalink&mibextid=6ojiHh" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/throttlefinds/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+    </nav>
+</header>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const header = document.getElementById('site-header');
+        addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 40), { passive: true });
+    });
+</script>

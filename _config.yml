@@ -1,6 +1,16 @@
+url: "https://throttlefinds.com"
+
 collections:
   cars:
     output: true
+    permalink: /cars/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: cars
+    values:
+      layout: car
 
 exclude:
   - app
