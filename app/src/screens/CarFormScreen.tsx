@@ -71,8 +71,12 @@ export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCa
         if (img.repoPath) {
           paths.push(img.repoPath);
         } else if (img.upload) {
-          const path = `images/uploads/${slug}-${stamp}-${i + 1}.jpg`;
+          const name = `${slug}-${stamp}-${i + 1}.jpg`;
+          const path = `images/uploads/${name}`;
           await putBinaryFile(path, img.upload.base64, `Add photo for ${carTitle(car)} [via app]`);
+          if (img.upload.thumbBase64) {
+            await putBinaryFile(`images/uploads/thumbs/${name}`, img.upload.thumbBase64, `Add thumb for ${carTitle(car)} [via app]`);
+          }
           paths.push(path);
         }
       }

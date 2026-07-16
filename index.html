@@ -18,6 +18,8 @@
     <meta property="og:image" content="{{ site.url }}/images/hero-bg.jpg">
     <meta name="twitter:card" content="summary_large_image">
 
+    <link rel="preload" as="image" href="/images/hero-bg.jpg" fetchpriority="high">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -128,7 +130,7 @@
                      data-color="{{ car.exterior_color }}">
                     <a class="car-img-section" href="{{ car.url }}" aria-label="View {{ car.year }} {{ car.make }} {{ car.model }}">
                         {% if car.sold %}<span class="status-chip sold-chip"><i class="fas fa-flag-checkered"></i>&nbsp; Sold</span>{% else %}<span class="status-chip">{{ car.title_status }}</span>{% endif %}
-                        <img src="/{{ car.main_image }}" alt="{{ car.year }} {{ car.make }} {{ car.model }}" class="main-img" loading="lazy">
+                        <img src="/{{ car.main_image }}" alt="{{ car.year }} {{ car.make }} {{ car.model }}" class="main-img" loading="lazy" decoding="async">
                     </a>
                     <div class="car-details">
                         <a class="car-title-link" href="{{ car.url }}"><h3 class="car-title">{{ car.year }} {{ car.make }} {{ car.model }}</h3></a>
@@ -148,9 +150,9 @@
                         {% endif %}
 
                         <div class="thumbnails">
-                            <img src="/{{ car.main_image }}" alt="Photo of {{ car.make }} {{ car.model }}" class="active" loading="lazy">
+                            <img src="/{{ car.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ car.main_image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="Photo of {{ car.make }} {{ car.model }}" class="active" loading="lazy" decoding="async">
                             {% for image in car.gallery limit: 4 %}
-                            <img src="/{{ image }}" alt="Photo of {{ car.make }} {{ car.model }}" loading="lazy">
+                            <img src="/{{ image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="Photo of {{ car.make }} {{ car.model }}" loading="lazy" decoding="async">
                             {% endfor %}
                         </div>
 
@@ -372,11 +374,12 @@
             const mainImg = card.querySelector('.main-img');
             card.querySelectorAll('.thumbnails img').forEach(thumb => {
                 thumb.addEventListener('click', () => {
-                    if (mainImg.src === thumb.src) return;
+                    const full = thumb.dataset.full || thumb.src;
+                    if (mainImg.src.endsWith(full)) return;
                     card.querySelectorAll('.thumbnails img').forEach(t => t.classList.remove('active'));
                     thumb.classList.add('active');
                     mainImg.style.opacity = 0;
-                    setTimeout(() => { mainImg.src = thumb.src; mainImg.style.opacity = 1; }, 220);
+                    setTimeout(() => { mainImg.src = full; mainImg.style.opacity = 1; }, 220);
                 });
             });
         });

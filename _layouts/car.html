@@ -78,13 +78,13 @@
         <div class="car-layout">
             <div class="gallery">
                 <div class="gallery-main" id="gallery-main">
-                    <img src="/{{ page.main_image }}" alt="{{ cartitle }}" id="gallery-main-img">
+                    <img src="/{{ page.main_image }}" alt="{{ cartitle }}" id="gallery-main-img" fetchpriority="high" decoding="async">
                     <span class="expand-hint"><i class="fas fa-expand"></i></span>
                 </div>
                 <div class="gallery-thumbs" id="gallery-thumbs">
-                    <img src="/{{ page.main_image }}" alt="{{ cartitle }} photo 1" class="active" loading="lazy">
+                    <img src="/{{ page.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ page.main_image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ cartitle }} photo 1" class="active" loading="lazy" decoding="async">
                     {% for image in page.gallery %}
-                    <img src="/{{ image }}" alt="{{ cartitle }} photo {{ forloop.index | plus: 1 }}" loading="lazy">
+                    <img src="/{{ image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ cartitle }} photo {{ forloop.index | plus: 1 }}" loading="lazy" decoding="async">
                     {% endfor %}
                 </div>
             </div>
@@ -141,7 +141,7 @@
             <div class="mini-grid">
                 {% for car in others limit: 3 %}
                 <a class="mini-card glass" href="{{ car.url }}">
-                    <img src="/{{ car.main_image }}" alt="{{ car.year }} {{ car.make }} {{ car.model }}" loading="lazy">
+                    <img src="/{{ car.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ car.main_image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ car.year }} {{ car.make }} {{ car.model }}" loading="lazy" decoding="async">
                     <div class="pad">
                         <div class="mini-title">{{ car.year }} {{ car.make }} {{ car.model }}</div>
                         <div class="mini-price" data-price="{{ car.price }}">${{ car.price }}</div>
@@ -174,9 +174,9 @@
             if (!isNaN(n)) el.textContent = n.toLocaleString('en-US') + ' mi';
         });
 
-        const photos = Array.from(document.querySelectorAll('#gallery-thumbs img')).map(t => t.src);
-        const mainImg = document.getElementById('gallery-main-img');
         const thumbs = Array.from(document.querySelectorAll('#gallery-thumbs img'));
+        const photos = thumbs.map(t => t.dataset.full || t.src);
+        const mainImg = document.getElementById('gallery-main-img');
         let current = 0;
 
         function setMain(index) {
