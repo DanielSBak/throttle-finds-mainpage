@@ -12,7 +12,7 @@ drive: "FWD"
 exterior_color: "Pink"
 interior_color: "Yellow"
 title_status: "Clean Title"
-sold: false
+sold: true
 main_image: "images/uploads/pink-raketa.png"
 gallery:
   - "images/uploads/car-2.jpg"
