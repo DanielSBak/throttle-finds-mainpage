@@ -758,11 +758,13 @@
 
                         <div class="specs-grid">
                             <div class="spec"><span class="label">Mileage</span><span class="value" data-mileage="{{ car.mileage }}">{{ car.mileage }} mi</span></div>
-                            <div class="spec"><span class="label">Engine</span><span class="value">{{ car.engine }}</span></div>
-                            <div class="spec"><span class="label">Transmission</span><span class="value">{{ car.transmission }}</span></div>
-                            <div class="spec"><span class="label">Drivetrain</span><span class="value">{{ car.drive }}</span></div>
-                            {% if car.exterior_color %}<div class="spec"><span class="label">Exterior</span><span class="value">{{ car.exterior_color }}</span></div>{% endif %}
-                            <div class="spec"><span class="label">VIN</span><span class="value">{{ car.vin }}</span></div>
+                            {% if car.engine and car.engine != "" %}<div class="spec"><span class="label">Engine</span><span class="value">{{ car.engine }}</span></div>{% endif %}
+                            {% if car.transmission and car.transmission != "" %}<div class="spec"><span class="label">Transmission</span><span class="value">{{ car.transmission }}</span></div>{% endif %}
+                            {% if car.drive and car.drive != "" %}<div class="spec"><span class="label">Drivetrain</span><span class="value">{{ car.drive }}</span></div>{% endif %}
+                            {% if car.fuel and car.fuel != "" %}<div class="spec"><span class="label">Fuel</span><span class="value">{{ car.fuel }}</span></div>{% endif %}
+                            {% if car.exterior_color and car.exterior_color != "" %}<div class="spec"><span class="label">Exterior</span><span class="value">{{ car.exterior_color }}</span></div>{% endif %}
+                            {% if car.interior_color and car.interior_color != "" %}<div class="spec"><span class="label">Interior</span><span class="value">{{ car.interior_color }}</span></div>{% endif %}
+                            {% if car.vin and car.vin != "" and car.vin != "?" %}<div class="spec"><span class="label">VIN</span><span class="value">{{ car.vin }}</span></div>{% endif %}
                         </div>
 
                         {% if car.content != "" %}
