@@ -1,0 +1,14 @@
+<script>
+    // Lightweight privacy-friendly page counter (GoatCounter, no external JS).
+    // Sends only: page path, title, referrer. No cookies, no personal data.
+    (function () {
+        if (location.hostname !== 'throttlefinds.com') return; // skip local/dev
+        if (navigator.webdriver) return; // skip automated browsers
+        var url = 'https://throttlefinds.goatcounter.com/count'
+            + '?p=' + encodeURIComponent(location.pathname)
+            + '&t=' + encodeURIComponent(document.title)
+            + '&r=' + encodeURIComponent(document.referrer)
+            + '&rnd=' + Math.random().toString(36).slice(2);
+        new Image().src = url;
+    })();
+</script>
