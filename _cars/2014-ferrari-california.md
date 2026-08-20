@@ -12,7 +12,7 @@ drive: "RWD"
 exterior_color: "Azuro Monaco Blue"
 interior_color: "White"
 title_status: "Salvage Title"
-sold: false
+sold: true
 main_image: "images/uploads/2014-ferrari-california-msyuasx4-1.jpg"
 gallery:
   - "images/uploads/2014-ferrari-california-msyuasx4-2.jpg"
