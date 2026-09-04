@@ -13,9 +13,9 @@ exterior_color: "Silver"
 interior_color: "Black"
 title_status: "Clean Title"
 sold: true
-main_image: "images/uploads/2018-chevrolet-silverado-1500-msytqye6-1.jpg"
+main_image: "images/uploads/2018-chevrolet-silverado-1500-msytqye6-2.jpg"
 gallery:
-  - "images/uploads/2018-chevrolet-silverado-1500-msytqye6-2.jpg"
+  - "images/uploads/2018-chevrolet-silverado-1500-msytqye6-1.jpg"
   - "images/uploads/2018-chevrolet-silverado-1500-msytqye6-3.jpg"
   - "images/uploads/2018-chevrolet-silverado-1500-msytqye6-4.jpg"
   - "images/uploads/2018-chevrolet-silverado-1500-msytqye6-5.jpg"
