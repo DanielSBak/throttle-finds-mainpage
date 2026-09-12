@@ -12,7 +12,7 @@ drive: "RWD"
 exterior_color: "Black"
 interior_color: "Black"
 title_status: "Clean Title"
-sold: false
+sold: true
 main_image: "images/uploads/2014-cadilac-ats-mtn0i74u-1.jpg"
 gallery:
   - "images/uploads/2014-cadilac-ats-mtn0i74u-2.jpg"
