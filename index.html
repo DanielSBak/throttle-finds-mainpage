@@ -84,7 +84,7 @@
                     <div class="count"><i class="fas fa-car" style="color: var(--red); margin-right: 8px;"></i><strong id="car-count">0</strong>&nbsp;vehicles available</div>
                     <div class="select-wrap">
                         <select id="sort-select" aria-label="Sort inventory">
-                            <option value="newest">Sort by: Newest Arrivals</option>
+                            <option value="newest">Year: Newest First</option>
                             <option value="price-low">Price: Low to High</option>
                             <option value="price-high">Price: High to Low</option>
                             <option value="mileage">Mileage: Lowest First</option>
@@ -121,28 +121,28 @@
                 {% assign cars = site.cars | reverse %}
                 {% for car in cars %}
                 <div class="car-card glass reveal{% if car.sold %} sold{% endif %}"
-                     data-price="{{ car.price }}"
-                     data-mileage="{{ car.mileage }}"
+                     data-price="{{ car.price | escape }}"
+                     data-mileage="{{ car.mileage | escape }}"
                      data-index="{{ forloop.index }}"
-                     data-sold="{{ car.sold | default: false }}"
-                     data-make="{{ car.make }}"
-                     data-title-status="{{ car.title_status }}"
-                     data-color="{{ car.exterior_color }}">
-                    <a class="car-img-section" href="{{ car.url }}" aria-label="View {{ car.year }} {{ car.make }} {{ car.model }}">
-                        {% if car.sold %}<span class="status-chip sold-chip"><i class="fas fa-flag-checkered"></i>&nbsp; Sold</span>{% else %}<span class="status-chip">{{ car.title_status }}</span>{% endif %}
-                        <img src="/{{ car.main_image }}" alt="{{ car.year }} {{ car.make }} {{ car.model }}" class="main-img" loading="lazy" decoding="async">
+                     data-sold="{{ car.sold | default: false | escape }}"
+                     data-make="{{ car.make | escape }}"
+                     data-title-status="{{ car.title_status | escape }}"
+                     data-color="{{ car.exterior_color | escape }}">
+                    <a class="car-img-section" href="{{ car.url | escape }}" aria-label="View {{ car.year | escape }} {{ car.make | escape }} {{ car.model | escape }}">
+                        {% if car.sold %}<span class="status-chip sold-chip"><i class="fas fa-flag-checkered"></i>&nbsp; Sold</span>{% else %}<span class="status-chip">{{ car.title_status | escape }}</span>{% endif %}
+                        <img src="/{{ car.main_image | escape }}" alt="{{ car.year | escape }} {{ car.make | escape }} {{ car.model | escape }}" class="main-img" loading="lazy" decoding="async">
                     </a>
                     <div class="car-details">
-                        <a class="car-title-link" href="{{ car.url }}"><h3 class="car-title">{{ car.year }} {{ car.make }} {{ car.model }}</h3></a>
-                        <div class="car-price" data-price="{{ car.price }}">${{ car.price }}</div>
+                        <a class="car-title-link" href="{{ car.url | escape }}"><h3 class="car-title">{{ car.year | escape }} {{ car.make | escape }} {{ car.model | escape }}</h3></a>
+                        <div class="car-price" data-price="{{ car.price | escape }}">${{ car.price | escape }}</div>
 
                         <div class="specs-grid">
-                            <div class="spec"><span class="label">Mileage</span><span class="value" data-mileage="{{ car.mileage }}">{{ car.mileage }} mi</span></div>
-                            {% if car.engine and car.engine != "" %}<div class="spec"><span class="label">Engine</span><span class="value">{{ car.engine }}</span></div>{% endif %}
-                            {% if car.transmission and car.transmission != "" %}<div class="spec"><span class="label">Transmission</span><span class="value">{{ car.transmission }}</span></div>{% endif %}
-                            {% if car.drive and car.drive != "" %}<div class="spec"><span class="label">Drivetrain</span><span class="value">{{ car.drive }}</span></div>{% endif %}
-                            {% if car.fuel and car.fuel != "" %}<div class="spec"><span class="label">Fuel</span><span class="value">{{ car.fuel }}</span></div>{% endif %}
-                            {% if car.exterior_color and car.exterior_color != "" %}<div class="spec"><span class="label">Exterior</span><span class="value">{{ car.exterior_color }}</span></div>{% endif %}
+                            <div class="spec"><span class="label">Mileage</span><span class="value" data-mileage="{{ car.mileage | escape }}">{{ car.mileage | escape }} mi</span></div>
+                            {% if car.engine and car.engine != "" %}<div class="spec"><span class="label">Engine</span><span class="value">{{ car.engine | escape }}</span></div>{% endif %}
+                            {% if car.transmission and car.transmission != "" %}<div class="spec"><span class="label">Transmission</span><span class="value">{{ car.transmission | escape }}</span></div>{% endif %}
+                            {% if car.drive and car.drive != "" %}<div class="spec"><span class="label">Drivetrain</span><span class="value">{{ car.drive | escape }}</span></div>{% endif %}
+                            {% if car.fuel and car.fuel != "" %}<div class="spec"><span class="label">Fuel</span><span class="value">{{ car.fuel | escape }}</span></div>{% endif %}
+                            {% if car.exterior_color and car.exterior_color != "" %}<div class="spec"><span class="label">Exterior</span><span class="value">{{ car.exterior_color | escape }}</span></div>{% endif %}
                         </div>
 
                         {% if car.content != "" %}
@@ -150,16 +150,16 @@
                         {% endif %}
 
                         <div class="thumbnails">
-                            <img src="/{{ car.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ car.main_image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="Photo of {{ car.make }} {{ car.model }}" class="active" loading="lazy" decoding="async">
+                            <img src="/{{ car.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' | escape }}" data-full="/{{ car.main_image | escape }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="Photo of {{ car.make | escape }} {{ car.model | escape }}" class="active" loading="lazy" decoding="async">
                             {% for image in car.gallery limit: 4 %}
-                            <img src="/{{ image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="Photo of {{ car.make }} {{ car.model }}" loading="lazy" decoding="async">
+                            <img src="/{{ image | replace: 'images/uploads/', 'images/uploads/thumbs/' | escape }}" data-full="/{{ image | escape }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="Photo of {{ car.make | escape }} {{ car.model | escape }}" loading="lazy" decoding="async">
                             {% endfor %}
                         </div>
 
                         {% if car.sold %}
                         <div class="sold-note"><i class="fas fa-flag-checkered"></i> This one found a new home</div>
                         {% else %}
-                        <a href="{{ car.url }}" class="btn btn-primary"><i class="fas fa-images"></i> View Details &amp; Photos</a>
+                        <a href="{{ car.url | escape }}" class="btn btn-primary"><i class="fas fa-images"></i> View Details &amp; Photos</a>
                         {% endif %}
                     </div>
                 </div>

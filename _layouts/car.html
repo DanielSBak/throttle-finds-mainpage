@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% capture cartitle %}{{ page.year }} {{ page.make }} {{ page.model }}{% endcapture %}
-    <title>{{ cartitle }} for Sale in Spartanburg, SC | Throttle Finds</title>
-    <meta name="description" content="{{ cartitle }} for sale at Throttle Finds in Spartanburg, SC — ${{ page.price }}, {{ page.mileage }} miles, {{ page.title_status }}.{% if page.sold %} SOLD.{% endif %} Call (864) 270-3379.">
-    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+    <title>{{ cartitle | escape }} for Sale in Spartanburg, SC | Throttle Finds</title>
+    <meta name="description" content="{{ cartitle | escape }} for sale at Throttle Finds in Spartanburg, SC — ${{ page.price | escape }}, {{ page.mileage | escape }} miles, {{ page.title_status | escape }}.{% if page.sold %} SOLD.{% endif %} Call (864) 270-3379.">
+    <link rel="canonical" href="{{ site.url }}{{ page.url | escape }}">
     <link rel="icon" type="image/png" href="/images/logo-icon.png">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Throttle Finds">
-    <meta property="og:title" content="{{ cartitle }} — ${{ page.price }}">
-    <meta property="og:description" content="{{ page.mileage }} miles · {{ page.title_status }} · Spartanburg, SC{% if page.sold %} · SOLD{% endif %}">
-    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-    <meta property="og:image" content="{{ site.url }}/{{ page.main_image }}">
+    <meta property="og:title" content="{{ cartitle | escape }} — ${{ page.price | escape }}">
+    <meta property="og:description" content="{{ page.mileage | escape }} miles · {{ page.title_status | escape }} · Spartanburg, SC{% if page.sold %} · SOLD{% endif %}">
+    <meta property="og:url" content="{{ site.url }}{{ page.url | escape }}">
+    <meta property="og:image" content="{{ site.url }}/{{ page.main_image | escape }}">
     <meta name="twitter:card" content="summary_large_image">
 
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/oswald-latin-600-normal.woff2" crossorigin>
@@ -26,40 +26,23 @@
 
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "Car",
-      "name": "{{ cartitle }}",
-      "brand": { "@type": "Brand", "name": "{{ page.make }}" },
-      "model": "{{ page.model }}",
-      "vehicleModelDate": "{{ page.year }}",
-      "mileageFromOdometer": { "@type": "QuantitativeValue", "value": "{{ page.mileage }}", "unitCode": "SMI" },
-      {% if page.vin and page.vin != "" and page.vin != "?" %}"vehicleIdentificationNumber": "{{ page.vin }}",{% endif %}
-      {% if page.exterior_color and page.exterior_color != "" %}"color": "{{ page.exterior_color }}",{% endif %}
-      {% if page.fuel and page.fuel != "" %}"fuelType": "{{ page.fuel }}",{% endif %}
-      {% if page.transmission and page.transmission != "" %}"vehicleTransmission": "{{ page.transmission }}",{% endif %}
-      {% if page.drive and page.drive != "" %}"driveWheelConfiguration": "{{ page.drive }}",{% endif %}
-      "image": [
-        "{{ site.url }}/{{ page.main_image }}"{% for image in page.gallery %},
-        "{{ site.url }}/{{ image }}"{% endfor %}
-      ],
+      "@context": "https://schema.org", "@type": "Car",
+      "name": {{ cartitle | jsonify | replace: '<', '\u003c' }},
+      "brand": { "@type": "Brand", "name": {{ page.make | jsonify | replace: '<', '\u003c' }} },
+      "model": {{ page.model | jsonify | replace: '<', '\u003c' }}, "vehicleModelDate": {{ page.year | jsonify | replace: '<', '\u003c' }},
+      "mileageFromOdometer": { "@type": "QuantitativeValue", "value": {{ page.mileage | jsonify | replace: '<', '\u003c' }}, "unitCode": "SMI" },
+      {% if page.vin and page.vin != "" and page.vin != "?" %}"vehicleIdentificationNumber": {{ page.vin | jsonify | replace: '<', '\u003c' }},{% endif %}
+      {% if page.exterior_color and page.exterior_color != "" and page.exterior_color != "?" %}"color": {{ page.exterior_color | jsonify | replace: '<', '\u003c' }},{% endif %}
+      {% if page.fuel and page.fuel != "" and page.fuel != "?" %}"fuelType": {{ page.fuel | jsonify | replace: '<', '\u003c' }},{% endif %}
+      {% if page.transmission and page.transmission != "" and page.transmission != "?" %}"vehicleTransmission": {{ page.transmission | jsonify | replace: '<', '\u003c' }},{% endif %}
+      {% if page.drive and page.drive != "" and page.drive != "?" %}"driveWheelConfiguration": {{ page.drive | jsonify | replace: '<', '\u003c' }},{% endif %}
+      "image": [{{ page.main_image | prepend: '/' | absolute_url | jsonify | replace: '<', '\u003c' }}{% for image in page.gallery %}, {{ image | prepend: '/' | absolute_url | jsonify | replace: '<', '\u003c' }}{% endfor %}],
       "offers": {
-        "@type": "Offer",
-        "price": "{{ page.price }}",
-        "priceCurrency": "USD",
+        "@type": "Offer", "price": {{ page.price | jsonify | replace: '<', '\u003c' }}, "priceCurrency": "USD",
         "availability": "https://schema.org/{% if page.sold %}SoldOut{% else %}InStock{% endif %}",
-        "url": "{{ site.url }}{{ page.url }}",
-        "seller": {
-          "@type": "AutoDealer",
-          "name": "Throttle Finds",
-          "telephone": "+1-864-270-3379",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "860 W Main St Ste B",
-            "addressLocality": "Spartanburg",
-            "addressRegion": "SC",
-            "postalCode": "29301",
-            "addressCountry": "US"
-          }
+        "url": {{ page.url | absolute_url | jsonify | replace: '<', '\u003c' }},
+        "seller": { "@type": "AutoDealer", "name": "Throttle Finds", "telephone": "+1-864-270-3379",
+          "address": { "@type": "PostalAddress", "streetAddress": "860 W Main St Ste B", "addressLocality": "Spartanburg", "addressRegion": "SC", "postalCode": "29301", "addressCountry": "US" }
         }
       }
     }
@@ -79,20 +62,20 @@
         <div class="car-layout">
             <div class="gallery">
                 <div class="gallery-main" id="gallery-main">
-                    <img src="/{{ page.main_image }}" alt="{{ cartitle }}" id="gallery-main-img" fetchpriority="high" decoding="async">
+                    <img src="/{{ page.main_image | escape }}" alt="{{ cartitle | escape }}" id="gallery-main-img" fetchpriority="high" decoding="async">
                     <span class="expand-hint"><i class="fas fa-expand"></i></span>
                 </div>
                 <div class="gallery-thumbs" id="gallery-thumbs">
-                    <img src="/{{ page.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ page.main_image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ cartitle }} photo 1" class="active" loading="lazy" decoding="async">
+                    <img src="/{{ page.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' | escape }}" data-full="/{{ page.main_image | escape }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ cartitle | escape }} photo 1" class="active" loading="lazy" decoding="async">
                     {% for image in page.gallery %}
-                    <img src="/{{ image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ cartitle }} photo {{ forloop.index | plus: 1 }}" loading="lazy" decoding="async">
+                    <img src="/{{ image | replace: 'images/uploads/', 'images/uploads/thumbs/' | escape }}" data-full="/{{ image | escape }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ cartitle | escape }} photo {{ forloop.index | plus: 1 }}" loading="lazy" decoding="async">
                     {% endfor %}
                 </div>
             </div>
 
             <aside class="car-info glass">
-                <h1>{{ cartitle }}</h1>
-                <div class="car-price" data-price="{{ page.price }}">${{ page.price }}</div>
+                <h1>{{ cartitle | escape }}</h1>
+                <div class="car-price" data-price="{{ page.price | escape }}">${{ page.price | escape }}</div>
 
                 <div class="info-chips">
                     {% if page.sold %}
@@ -100,18 +83,18 @@
                     {% else %}
                     <span class="info-chip">Available Now</span>
                     {% endif %}
-                    <span class="info-chip gray">{{ page.title_status }}</span>
+                    <span class="info-chip gray">{{ page.title_status | escape }}</span>
                 </div>
 
                 <div class="specs-grid">
-                    <div class="spec"><span class="label">Mileage</span><span class="value" data-mileage="{{ page.mileage }}">{{ page.mileage }} mi</span></div>
-                    {% if page.engine and page.engine != "" %}<div class="spec"><span class="label">Engine</span><span class="value">{{ page.engine }}</span></div>{% endif %}
-                    {% if page.transmission and page.transmission != "" %}<div class="spec"><span class="label">Transmission</span><span class="value">{{ page.transmission }}</span></div>{% endif %}
-                    {% if page.drive and page.drive != "" %}<div class="spec"><span class="label">Drivetrain</span><span class="value">{{ page.drive }}</span></div>{% endif %}
-                    {% if page.fuel and page.fuel != "" %}<div class="spec"><span class="label">Fuel</span><span class="value">{{ page.fuel }}</span></div>{% endif %}
-                    {% if page.exterior_color and page.exterior_color != "" %}<div class="spec"><span class="label">Exterior</span><span class="value">{{ page.exterior_color }}</span></div>{% endif %}
-                    {% if page.interior_color and page.interior_color != "" %}<div class="spec"><span class="label">Interior</span><span class="value">{{ page.interior_color }}</span></div>{% endif %}
-                    {% if page.vin and page.vin != "" and page.vin != "?" %}<div class="spec"><span class="label">VIN</span><span class="value">{{ page.vin }}</span></div>{% endif %}
+                    <div class="spec"><span class="label">Mileage</span><span class="value" data-mileage="{{ page.mileage | escape }}">{{ page.mileage | escape }} mi</span></div>
+                    {% if page.engine and page.engine != "" %}<div class="spec"><span class="label">Engine</span><span class="value">{{ page.engine | escape }}</span></div>{% endif %}
+                    {% if page.transmission and page.transmission != "" %}<div class="spec"><span class="label">Transmission</span><span class="value">{{ page.transmission | escape }}</span></div>{% endif %}
+                    {% if page.drive and page.drive != "" %}<div class="spec"><span class="label">Drivetrain</span><span class="value">{{ page.drive | escape }}</span></div>{% endif %}
+                    {% if page.fuel and page.fuel != "" %}<div class="spec"><span class="label">Fuel</span><span class="value">{{ page.fuel | escape }}</span></div>{% endif %}
+                    {% if page.exterior_color and page.exterior_color != "" %}<div class="spec"><span class="label">Exterior</span><span class="value">{{ page.exterior_color | escape }}</span></div>{% endif %}
+                    {% if page.interior_color and page.interior_color != "" %}<div class="spec"><span class="label">Interior</span><span class="value">{{ page.interior_color | escape }}</span></div>{% endif %}
+                    {% if page.vin and page.vin != "" and page.vin != "?" %}<div class="spec"><span class="label">VIN</span><span class="value">{{ page.vin | escape }}</span></div>{% endif %}
                 </div>
 
                 <div class="cta-stack">
@@ -119,7 +102,7 @@
                     <div class="sold-note"><i class="fas fa-flag-checkered"></i> This one found a new home</div>
                     <a href="/#inventory" class="btn btn-glass"><i class="fas fa-car"></i> See What's Available</a>
                     {% else %}
-                    <a href="/?vehicle={{ cartitle | url_encode }}#application-form" class="btn btn-primary"><i class="fas fa-key"></i> Apply For This Vehicle</a>
+                    <a href="/?vehicle={{ cartitle | url_encode | escape }}#application-form" class="btn btn-primary"><i class="fas fa-key"></i> Apply For This Vehicle</a>
                     <a href="tel:+18642703379" class="btn btn-glass"><i class="fas fa-phone"></i> Call (864) 270-3379</a>
                     {% endif %}
                 </div>
@@ -141,11 +124,11 @@
             <h2>More From The Lot</h2>
             <div class="mini-grid">
                 {% for car in others limit: 3 %}
-                <a class="mini-card glass" href="{{ car.url }}">
-                    <img src="/{{ car.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' }}" data-full="/{{ car.main_image }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ car.year }} {{ car.make }} {{ car.model }}" loading="lazy" decoding="async">
+                <a class="mini-card glass" href="{{ car.url | escape }}">
+                    <img src="/{{ car.main_image | replace: 'images/uploads/', 'images/uploads/thumbs/' | escape }}" data-full="/{{ car.main_image | escape }}" onerror="this.onerror=null;this.src=this.dataset.full" alt="{{ car.year | escape }} {{ car.make | escape }} {{ car.model | escape }}" loading="lazy" decoding="async">
                     <div class="pad">
-                        <div class="mini-title">{{ car.year }} {{ car.make }} {{ car.model }}</div>
-                        <div class="mini-price" data-price="{{ car.price }}">${{ car.price }}</div>
+                        <div class="mini-title">{{ car.year | escape }} {{ car.make | escape }} {{ car.model | escape }}</div>
+                        <div class="mini-price" data-price="{{ car.price | escape }}">${{ car.price | escape }}</div>
                     </div>
                 </a>
                 {% endfor %}

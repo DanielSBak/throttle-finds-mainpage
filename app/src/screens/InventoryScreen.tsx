@@ -3,6 +3,7 @@ import {
   Alert, FlatList, Image, Pressable, RefreshControl, StyleSheet, Text, View,
 } from 'react-native';
 import { Car, carTitle, fetchCars, imageUrl, setSold } from '../cars';
+import { loadDraft } from '../drafts';
 import { clearToken } from '../github';
 import { colors, radius } from '../theme';
 import { Button } from '../ui';
@@ -19,19 +20,23 @@ export function InventoryScreen(props: {
 }) {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hasDraft, setHasDraft] = useState(false);
+  const [loadError, setLoadError] = useState('');
   const [workingPath, setWorkingPath] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    setLoading(true);
     try {
       setCars(await fetchCars());
+      setLoadError('');
     } catch (e) {
-      Alert.alert('Could not load inventory', String(e));
+      setLoadError(e instanceof Error ? e.message : String(e));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { load(); void loadDraft('new').then((d) => setHasDraft(d !== null)).catch(() => setHasDraft(true)); }, [load]);
 
   async function toggleSold(car: Car) {
     const next = !car.sold;
@@ -69,13 +74,14 @@ export function InventoryScreen(props: {
         <Pressable onPress={signOut}><Text style={styles.signOut}>Sign out</Text></Pressable>
       </View>
 
+      {!!loadError && <Text style={{ color: '#ff8a8a', marginBottom: 12 }}>{loadError} Pull down to retry.</Text>}
       <FlatList
         data={cars}
         keyExtractor={(c) => c.path ?? carTitle(c)}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={colors.muted} />}
         contentContainerStyle={{ paddingBottom: 110, gap: 14 }}
         ListEmptyComponent={
-          loading ? null : <Text style={styles.empty}>No cars yet. Tap “Add Car” to publish the first one.</Text>
+          loading || loadError ? null : <Text style={styles.empty}>No cars yet. Tap “Add Car” to publish the first one.</Text>
         }
         renderItem={({ item }) => (
           <Pressable style={[styles.card, item.sold && { opacity: 0.65 }]} onPress={() => props.onEdit(item)}>
@@ -95,7 +101,7 @@ export function InventoryScreen(props: {
                 )}
                 <Pressable
                   style={styles.soldBtn}
-                  disabled={workingPath === item.path}
+                  disabled={workingPath !== null}
                   onPress={() => toggleSold(item)}
                 >
                   <Text style={styles.soldBtnText}>
@@ -109,7 +115,7 @@ export function InventoryScreen(props: {
       />
 
       <View style={styles.fabWrap}>
-        <Button title="+  Add Car" onPress={props.onAdd} />
+        <Button title={hasDraft ? "Continue Saved Draft" : "+  Add Car"} onPress={props.onAdd} />
       </View>
     </View>
   );

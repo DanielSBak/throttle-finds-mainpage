@@ -1,93 +1,131 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  Alert, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView,
+  ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView,
   StyleSheet, Text, View,
 } from 'react-native';
 import {
-  Car, DRIVE_OPTIONS, FUEL_OPTIONS, TITLE_OPTIONS, carTitle, emptyCar,
-  imageUrl, removeCar, saveCar, slugify,
+  Car, DRIVE_OPTIONS, FUEL_OPTIONS, TITLE_OPTIONS, carTitle,
+  imageUrl, removeCar, validateCar,
 } from '../cars';
-import { putBinaryFile } from '../github';
-import { PickedPhoto, pickPhotos } from '../photos';
+import { pickPhotos } from '../photos';
+import { Draft, createDraft, deleteDraft, draftKey, loadDraft, photoUri, prepareDraft, saveDraft } from '../drafts';
+import { publishDraft } from '../publish';
 import { colors, radius } from '../theme';
 import { Button, ChipSelect, Field } from '../ui';
 
-interface PendingImage {
-  /** Preview URI (local for new photos, site URL for existing ones). */
-  preview: string;
-  /** Set only for freshly picked photos that still need uploading. */
-  upload?: PickedPhoto;
-  /** Set only for photos already in the repo. */
-  repoPath?: string;
-}
-
 export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCancel: () => void }) {
   const editing = props.car !== null;
-  const [car, setCar] = useState<Car>(props.car ? { ...props.car } : emptyCar());
-  const [images, setImages] = useState<PendingImage[]>(() => {
-    if (!props.car) return [];
-    const existing = [props.car.main_image, ...props.car.gallery].filter(Boolean);
-    return existing.map((p) => ({ preview: imageUrl(p), repoPath: p }));
-  });
+  const key = draftKey(props.car);
+  const [draft, setDraft] = useState(() => createDraft(props.car));
+  const current = useRef(draft);
+  const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
+  const locked = useRef(false);
+  const [progress, setProgress] = useState('');
+  const [draftStatus, setDraftStatus] = useState('');
+  const saveGeneration = useRef(0);
+  const { car, images } = draft;
 
-  function set<K extends keyof Car>(key: K, value: Car[K]) {
-    setCar((c) => ({ ...c, [key]: value }));
+  function apply(next: Draft): Promise<void> {
+    current.current = next;
+    setDraft(next);
+    setDraftStatus('Saving draft…');
+    const generation = ++saveGeneration.current;
+    const job = saveDraft(key, next);
+    void job.then(() => {
+      if (generation === saveGeneration.current) setDraftStatus('Draft saved on this phone');
+    }, () => {
+      if (generation === saveGeneration.current) setDraftStatus('Draft could not be saved. Free up space and try again before leaving.');
+    });
+    return job;
+  }
+
+  useEffect(() => {
+    let active = true;
+    loadDraft(key).then((saved) => {
+      if (!active) return;
+      if (!saved) { setReady(true); return; }
+      const restore = () => {
+        current.current = saved;
+        setDraft(saved);
+        setDraftStatus('Saved draft restored');
+        setReady(true);
+      };
+      if (props.car && saved.car.sha !== props.car.sha) {
+        Alert.alert('Listing changed', 'Someone updated this listing after your draft was saved. Keep your draft for reference, or discard it and open the latest version. Publishing an outdated draft will not overwrite their changes.', [
+          { text: 'Keep draft', onPress: restore },
+          { text: 'Use latest', style: 'destructive', onPress: () => {
+            void deleteDraft(key).then(() => { setReady(true); }, (e) => Alert.alert('Could not clear draft', String(e)));
+          } },
+        ], { cancelable: false });
+      } else restore();
+    }).catch((e) => {
+      if (active) Alert.alert('Could not open draft', String(e), [{ text: 'Back', onPress: props.onCancel }]);
+    });
+    return () => { active = false; };
+  }, []);
+
+  function set<K extends keyof Car>(field: K, value: Car[K]) {
+    if (locked.current) return;
+    void apply({ ...current.current, car: { ...current.current.car, [field]: value } });
   }
 
   async function addPhotos() {
-    const picked = await pickPhotos(10 - images.length);
-    setImages((imgs) => [...imgs, ...picked.map((p) => ({ preview: p.uri, upload: p }))]);
+    if (locked.current) return;
+    locked.current = true; setBusy(true);
+    try {
+      await pickPhotos(10 - current.current.images.length, key, async (photo) => {
+        await apply({ ...current.current, images: [...current.current.images, photo] });
+      }, setProgress);
+    } catch (e) {
+      Alert.alert('Could not add photo', e instanceof Error ? e.message : String(e));
+    } finally { locked.current = false; setBusy(false); setProgress(''); }
   }
 
   function removePhoto(index: number) {
-    setImages((imgs) => imgs.filter((_, i) => i !== index));
+    if (!locked.current) void apply({ ...current.current, images: current.current.images.filter((_, i) => i !== index) });
   }
-
   function makeCover(index: number) {
-    setImages((imgs) => [imgs[index], ...imgs.filter((_, i) => i !== index)]);
+    if (!locked.current) void apply({ ...current.current, images: [current.current.images[index], ...current.current.images.filter((_, i) => i !== index)] });
   }
 
-  function validate(): string | null {
-    if (!car.year.trim() || !/^\d{4}$/.test(car.year.trim())) return 'Enter a 4-digit year';
-    if (!car.make.trim()) return 'Enter the make (e.g. BMW)';
-    if (!car.model.trim()) return 'Enter the model (e.g. M5)';
-    if (!car.price.trim() || isNaN(parseFloat(car.price))) return 'Enter the price as a number';
-    if (!car.mileage.trim() || isNaN(parseFloat(car.mileage))) return 'Enter the mileage as a number';
-    if (images.length === 0) return 'Add at least one photo';
-    return null;
+  async function leave() {
+    if (locked.current) return;
+    locked.current = true; setBusy(true);
+    try { await saveDraft(key, current.current); props.onCancel(); }
+    catch (e) { Alert.alert('Draft not saved', 'Could not save this draft. Free up space and try again before leaving.'); }
+    finally { locked.current = false; setBusy(false); }
+  }
+
+  function discard() {
+    Alert.alert('Discard draft?', 'Remove the unsaved changes and local photos from this phone? Published listings will stay on the website.', [
+      { text: 'Keep draft', style: 'cancel' },
+      { text: 'Discard', style: 'destructive', onPress: async () => {
+        if (locked.current) return;
+        locked.current = true; setBusy(true);
+        try { await deleteDraft(key); props.onCancel(); }
+        catch (e) { Alert.alert('Could not discard draft', String(e)); }
+        finally { locked.current = false; setBusy(false); }
+      } },
+    ]);
   }
 
   async function save() {
-    const problem = validate();
+    if (locked.current) return;
+    const problem = validateCar(current.current.car, current.current.images.length);
     if (problem) { Alert.alert('Almost there', problem); return; }
-    setBusy(true);
+    locked.current = true; setBusy(true);
     try {
-      const slug = slugify(car);
-      const stamp = Date.now().toString(36);
-      const paths: string[] = [];
-      for (let i = 0; i < images.length; i++) {
-        const img = images[i];
-        if (img.repoPath) {
-          paths.push(img.repoPath);
-        } else if (img.upload) {
-          const name = `${slug}-${stamp}-${i + 1}.jpg`;
-          const path = `images/uploads/${name}`;
-          await putBinaryFile(path, img.upload.base64, `Add photo for ${carTitle(car)} [via app]`);
-          if (img.upload.thumbBase64) {
-            await putBinaryFile(`images/uploads/thumbs/${name}`, img.upload.thumbBase64, `Add thumb for ${carTitle(car)} [via app]`);
-          }
-          paths.push(path);
-        }
-      }
-      const toSave: Car = { ...car, main_image: paths[0], gallery: paths.slice(1) };
-      await saveCar(toSave);
-      Alert.alert('Published!', 'The website updates in about a minute.', [{ text: 'OK', onPress: props.onDone }]);
+      const prepared = prepareDraft(current.current);
+      await apply(prepared);
+      await publishDraft(key, prepared, setProgress);
+      try { await deleteDraft(key); }
+      catch { /* Publishing succeeded. An unchanged retained draft is safe to retry. */ }
+      Alert.alert('Published!', 'The website will update after GitHub finishes rebuilding it.');
+      props.onDone();
     } catch (e) {
-      Alert.alert('Save failed', String(e));
-    } finally {
-      setBusy(false);
-    }
+      Alert.alert('Could not publish', e instanceof Error ? e.message : String(e));
+    } finally { locked.current = false; setBusy(false); setProgress(''); }
   }
 
   function confirmDelete() {
@@ -97,34 +135,40 @@ export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCa
         text: 'Delete',
         style: 'destructive',
         onPress: async () => {
-          setBusy(true);
+          if (locked.current) return;
+          locked.current = true; setBusy(true);
           try {
-            await removeCar(car);
+            await removeCar(current.current.car);
+            await deleteDraft(key);
             props.onDone();
           } catch (e) {
             Alert.alert('Delete failed', String(e));
           } finally {
-            setBusy(false);
+            locked.current = false; setBusy(false);
           }
         },
       },
     ]);
   }
 
+  if (!ready) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={colors.red} /></View>;
+
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.wrap} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
-          <Pressable onPress={props.onCancel}><Text style={styles.cancel}>‹ Back</Text></Pressable>
+          <Pressable disabled={busy} onPress={leave}><Text style={styles.cancel}>‹ Back</Text></Pressable>
           <Text style={styles.title}>{editing ? 'Edit Car' : 'Add Car'}</Text>
           <View style={{ width: 50 }} />
         </View>
 
+        <Text accessibilityLiveRegion="polite" style={{ color: colors.muted, marginBottom: 12 }}>{progress || draftStatus}</Text>
+        <View pointerEvents={busy ? 'none' : 'auto'}>
         <Text style={styles.sectionLabel}>Photos (first one is the cover)</Text>
         <View style={styles.photoGrid}>
           {images.map((img, i) => (
-            <View key={img.preview + i} style={styles.photoCell}>
-              <Image source={{ uri: img.preview }} style={styles.photo} />
+            <View key={img.id} style={styles.photoCell}>
+              <Image source={{ uri: img.localFile ? photoUri(key, img.localFile) : imageUrl(img.repoPath) }} style={styles.photo} />
               {i === 0 && <View style={styles.coverTag}><Text style={styles.coverTagText}>COVER</Text></View>}
               <View style={styles.photoActions}>
                 {i !== 0 && (
@@ -166,7 +210,9 @@ export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCa
         </View>
         <Field label="Description & Mechanic Notes" value={car.body} onChange={(v) => set('body', v)} placeholder="Condition, work done, known issues..." multiline />
 
+        </View>
         <Button title={editing ? 'Save Changes' : 'Publish to Website'} onPress={save} busy={busy} />
+        <View style={{ marginTop: 12 }}><Button title="Discard Draft" kind="ghost" onPress={discard} disabled={busy} /></View>
         {editing && (
           <View style={{ marginTop: 12 }}>
             <Button title="Delete Listing" kind="danger" onPress={confirmDelete} disabled={busy} />

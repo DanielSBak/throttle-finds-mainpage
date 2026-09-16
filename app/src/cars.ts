@@ -40,7 +40,10 @@ export function emptyCar(): Car {
 function unquote(v: string): string {
   const t = v.trim();
   if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
-    return t.slice(1, -1);
+    if (t.startsWith('"')) {
+      try { return JSON.parse(t) as string; } catch { /* Preserve legacy malformed strings. */ }
+    }
+    return t.slice(1, -1).replace(/''/g, "'");
   }
   return t;
 }
@@ -144,13 +147,14 @@ export async function fetchCars(): Promise<Car[]> {
   return cars.reverse();
 }
 
-export async function saveCar(car: Car): Promise<void> {
-  const isNew = !car.path;
-  const path = car.path ?? `_cars/${slugify(car)}.md`;
+export async function saveCar(car: Car): Promise<string> {
+  if (!car.path) throw new Error('Missing listing ID. Reopen the draft before publishing.');
+  const isNew = !car.sha;
+  const path = car.path;
   const message = isNew
     ? `Add listing: ${carTitle(car)} [via app]`
     : `Update listing: ${carTitle(car)} [via app]`;
-  await putTextFile(path, serializeCar(car), message, car.sha);
+  return putTextFile(path, serializeCar(car), message, car.sha);
 }
 
 export async function setSold(car: Car, sold: boolean): Promise<void> {
@@ -165,4 +169,29 @@ export async function setSold(car: Car, sold: boolean): Promise<void> {
 export async function removeCar(car: Car): Promise<void> {
   if (!car.path || !car.sha) throw new Error('Car has not been saved yet');
   await deleteFile(car.path, car.sha, `Remove listing: ${carTitle(car)} [via app]`);
+}
+
+/** The UUID belongs to the draft, so retries never create a second listing. */
+export function newListingPath(car: Car, id: string): string {
+  return `_cars/${slugify(car).slice(0, 90) || 'car'}-${id}.md`;
+}
+
+export function normalizeNumber(value: string): string | null {
+  const trimmed = value.trim();
+  if (!/^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d{1,2})?$/.test(trimmed)) return null;
+  const plain = trimmed.replace(/,/g, '');
+  const n = Number(plain);
+  return Number.isFinite(n) && n <= Number.MAX_SAFE_INTEGER ? String(n) : null;
+}
+
+export function validateCar(car: Car, photoCount: number): string | null {
+  if (!/^\d{4}$/.test(car.year.trim()) || Number(car.year) < 1886 || Number(car.year) > new Date().getFullYear() + 2) return 'Enter a valid 4-digit model year';
+  if (!car.make.trim()) return 'Enter the make (e.g. BMW)';
+  if (!car.model.trim()) return 'Enter the model (e.g. M5)';
+  const price = normalizeNumber(car.price);
+  if (price === null || Number(price) <= 0) return 'Enter a price greater than zero (e.g. 24,500)';
+  const mileage = normalizeNumber(car.mileage);
+  if (mileage === null || !Number.isInteger(Number(mileage))) return 'Enter mileage as a whole number (e.g. 93,000)';
+  if (photoCount < 1 || photoCount > 10) return 'Add between 1 and 10 photos';
+  return null;
 }

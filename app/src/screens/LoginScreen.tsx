@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Image, Linking, StyleSheet, Text, TextInput, View } from 'react-native';
 import { GITHUB_OAUTH_CLIENT_ID } from '../config';
-import { pollDeviceFlow, saveToken, startDeviceFlow, validateToken } from '../github';
+import { clearToken, pollDeviceFlow, saveToken, startDeviceFlow, validateToken } from '../github';
 import { colors, radius } from '../theme';
 import { Button } from '../ui';
 
@@ -15,6 +15,7 @@ export function LoginScreen(props: { onSignedIn: () => void }) {
     if (await validateToken()) {
       props.onSignedIn();
     } else {
+      await clearToken();
       Alert.alert('Access denied', 'This account cannot access the inventory. Ask Daniel to add you as a collaborator on GitHub.');
     }
   }

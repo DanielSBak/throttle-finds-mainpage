@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, StatusBar as RNStatusBar, StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Car } from './src/cars';
-import { validateToken } from './src/github';
+import { getToken } from './src/github';
 import { CarFormScreen } from './src/screens/CarFormScreen';
 import { InventoryScreen } from './src/screens/InventoryScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
@@ -20,7 +20,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
-        setScreen((await validateToken()) ? { name: 'inventory' } : { name: 'login' });
+        setScreen((await getToken()) ? { name: 'inventory' } : { name: 'login' });
       } catch {
         setScreen({ name: 'login' });
       }

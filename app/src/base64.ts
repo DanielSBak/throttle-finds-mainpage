@@ -43,7 +43,7 @@ export function encodeBase64(str: string): string {
   return out;
 }
 
-export function decodeBase64(b64: string): string {
+export function decodeBase64Bytes(b64: string): Uint8Array {
   const clean = b64.replace(/[^A-Za-z0-9+/]/g, '');
   const bytes: number[] = [];
   for (let i = 0; i < clean.length; i += 4) {
@@ -55,5 +55,9 @@ export function decodeBase64(b64: string): string {
     if (n2 >= 0) bytes.push(((n1 & 15) << 4) | (n2 >> 2));
     if (n3 >= 0) bytes.push(((n2 & 3) << 6) | n3);
   }
-  return utf8Decode(bytes);
+  return new Uint8Array(bytes);
+}
+
+export function decodeBase64(b64: string): string {
+  return utf8Decode(Array.from(decodeBase64Bytes(b64)));
 }
