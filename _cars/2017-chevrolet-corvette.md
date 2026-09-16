@@ -13,9 +13,8 @@ exterior_color: "Burgundy"
 interior_color: "Burgundy / Black"
 title_status: "Clean Title"
 sold: false
-main_image: "images/uploads/2017-chevrolet-corvette-mtxt4tkv-1.jpg"
+main_image: "images/uploads/2017-chevrolet-corvette-mtxt4tkv-2.jpg"
 gallery:
-  - "images/uploads/2017-chevrolet-corvette-mtxt4tkv-2.jpg"
   - "images/uploads/2017-chevrolet-corvette-mtxt4tkv-3.jpg"
   - "images/uploads/2017-chevrolet-corvette-mtxt4tkv-4.jpg"
   - "images/uploads/2017-chevrolet-corvette-mtxt4tkv-5.jpg"
