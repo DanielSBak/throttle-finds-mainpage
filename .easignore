@@ -1,0 +1,20 @@
+# EAS builds the mobile app only; inventory remains on GitHub/Pages.
+.git
+node_modules/
+.DS_Store
+*.log
+app/.expo/
+app/dist/
+app/ios/
+app/android/
+/images/
+/_cars/
+/_layouts/
+/_includes/
+/_site/
+/assets/
+/index.html
+/_config.yml
+/CNAME
+/robots.txt
+/sitemap.xml
