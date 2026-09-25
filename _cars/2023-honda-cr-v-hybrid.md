@@ -12,7 +12,7 @@ drive: "FWD"
 exterior_color: "Gray"
 interior_color: "Black"
 title_status: "Clean Title"
-sold: false
+sold: true
 main_image: "images/uploads/2023-honda-cr-v-hybrid-mtxspb8m-1.jpg"
 gallery:
   - "images/uploads/2023-honda-cr-v-hybrid-mtxspb8m-2.jpg"
