@@ -12,7 +12,7 @@ drive: "RWD"
 exterior_color: "Silver"
 interior_color: "Red / Black"
 title_status: "Clean Title"
-sold: false
+sold: true
 main_image: "images/uploads/2018-merceds-c63-mu3c7lj2-1.jpg"
 gallery:
   - "images/uploads/2018-merceds-c63-mu3c7lj2-2.jpg"
