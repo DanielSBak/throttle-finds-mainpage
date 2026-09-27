@@ -106,7 +106,7 @@ export function PhotoEditor(props: {
           <View style={styles.bar}><Text style={styles.heading}>Photo {index + 1} of {images.length}{index === 0 ? ' · Cover' : ''}</Text>
             <Action title="Done" onPress={() => setSelected(null)} /></View>
           <View style={{ flex: 1 }} onLayout={e => setPreviewSize(e.nativeEvent.layout)}>
-          <ScrollView style={StyleSheet.absoluteFill} centerContent
+          <ScrollView style={StyleSheet.absoluteFill}
             minimumZoomScale={1} maximumZoomScale={3} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}
             key={photo.id}>
             <CachedPhoto uri={uriFor(photo, draftKey)} previewUri={previewUri(photo)} onLoad={prefetchNeighbors} style={{ width: previewSize.width, height: previewSize.height }}
