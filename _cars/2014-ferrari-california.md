@@ -13,7 +13,8 @@ exterior_color: "Azuro Monaco Blue"
 interior_color: "White"
 title_status: "Salvage Title"
 sold: true
-main_image: "images/uploads/2014-ferrari-california-msyuasx4-1.jpg"
+main_image: "images/uploads/54a375ea-2d98-4232-b1a0-110fcde778f2.jpg"
+publication_id: "15a536d70692ab9c0aee422d4c8a0f94fe660e19"
 gallery:
   - "images/uploads/2014-ferrari-california-msyuasx4-2.jpg"
   - "images/uploads/2014-ferrari-california-msyuasx4-3.jpg"
