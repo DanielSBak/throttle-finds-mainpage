@@ -71,7 +71,8 @@ test('number validation accepts grouped values, rejects partial parses, negative
   for (const value of ['24,50', '100abc', '-10', 'Infinity', '1e4', '100\nsold: true']) assert.equal(cars.normalizeNumber(value), null, value);
   assert.equal(cars.validateCar(sample(cars), 10), null);
   assert.ok(cars.validateCar({ ...sample(cars), mileage: '1.5' }, 1));
-  assert.ok(cars.validateCar(sample(cars), 11));
+  assert.equal(cars.validateCar(sample(cars), 30), null);
+  assert.ok(cars.validateCar(sample(cars), 31));
 });
 
 test('two identical cars get unique persistent IDs; existing listing URLs are retained', () => {
@@ -235,4 +236,29 @@ test('suggestions are optional, case-insensitive and deduplicate inventory varia
   assert.equal(suggestions('custom', ['BMW']).length, 0);
   assert.equal(makeKey('Mercedes'), makeKey('Mercedes-Benz'));
   assert.equal(suggestions('F1', ['F-150', 'Fiesta']).join(), 'F-150');
+});
+
+
+test('thumbnail URLs retain a safe fallback path for legacy and non-upload images', () => {
+  const { thumbnailUrl } = harness().load('imageSources');
+  assert.equal(thumbnailUrl('images/uploads/a.jpg'), 'https://throttlefinds.com/images/uploads/thumbs/a.jpg');
+  assert.equal(thumbnailUrl('/images/uploads/a.jpg'), 'https://throttlefinds.com/images/uploads/thumbs/a.jpg');
+  assert.equal(thumbnailUrl('images/uploads/thumbs/a.jpg'), 'https://throttlefinds.com/images/uploads/thumbs/a.jpg');
+  assert.equal(thumbnailUrl('images/legacy.jpg'), 'https://throttlefinds.com/images/legacy.jpg');
+});
+
+test('30-photo listing uploads all images in order and retry does not duplicate files', async () => {
+  const h = harness(), drafts = h.load('drafts'), cars = h.load('cars');
+  const images = Array.from({ length: 30 }, (_, i) => ({ id: String(i), repoPath: `images/uploads/photo-${i}.jpg`, localFile: `photo-${i}.jpg`, thumbFile: `thumb-${i}.jpg` }));
+  const draft = drafts.prepareDraft({ ...drafts.createDraft(null), car: sample(cars), images });
+  for (const image of images) for (const name of [image.localFile, image.thumbFile]) h.disk.set(drafts.photoUri('new', name), Buffer.from(name).toString('base64'));
+  const publish = h.load('publish').publishDraft;
+  await publish('new', draft, () => {});
+  assert.equal(h.writes.length, 61);
+  const saved = cars.parseCar(Buffer.from(h.remote.get(draft.car.path).content, 'base64').toString());
+  assert.equal(saved.main_image, images[0].repoPath);
+  assert.equal(saved.gallery.length, 29);
+  assert.equal(saved.gallery[28], images[29].repoPath);
+  await publish('new', draft, () => {});
+  assert.equal(h.writes.length, 61);
 });

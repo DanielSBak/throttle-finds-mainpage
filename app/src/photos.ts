@@ -5,19 +5,19 @@ import { randomUUID } from 'expo-crypto';
 import { DraftImage, ensureDraftDirectory, photoUri } from './drafts';
 import { fitPhoto } from './photoSizing';
 
-const TARGET_BYTES = 900 * 1024;
+import { FULL_PHOTO_BYTES, THUMBNAIL_BYTES } from './photoLimits';
 
 async function compress(asset: { uri: string; width: number; height: number }, key: string): Promise<DraftImage> {
   const id = randomUUID();
   const localFile = `${id}.jpg`;
   const thumbFile = `${id}-thumb.jpg`;
-  // Process one asset at a time, without retaining ten base64 copies in React state.
+  // Process one asset at a time, without retaining base64 copies in React state.
   for (const [edge, quality] of [[1600, 0.75], [1400, 0.65], [1200, 0.55], [1000, 0.45]]) {
     const result = await ImageManipulator.manipulateAsync(asset.uri,
       [{ resize: fitPhoto(asset.width, asset.height, edge) }],
       { compress: quality, format: ImageManipulator.SaveFormat.JPEG });
     const info = await FileSystem.getInfoAsync(result.uri);
-    if (info.exists && info.size <= TARGET_BYTES) {
+    if (info.exists && info.size <= FULL_PHOTO_BYTES) {
       await FileSystem.copyAsync({ from: result.uri, to: photoUri(key, localFile) });
       await FileSystem.deleteAsync(result.uri, { idempotent: true });
       break;
@@ -25,11 +25,19 @@ async function compress(asset: { uri: string; width: number; height: number }, k
     await FileSystem.deleteAsync(result.uri, { idempotent: true });
   }
   if (!(await FileSystem.getInfoAsync(photoUri(key, localFile))).exists) throw new Error('This photo is too large to prepare. Choose a smaller version.');
-  const thumb = await ImageManipulator.manipulateAsync(photoUri(key, localFile),
-    [{ resize: fitPhoto(asset.width, asset.height, 480) }],
-    { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG });
-  await FileSystem.copyAsync({ from: thumb.uri, to: photoUri(key, thumbFile) });
-  await FileSystem.deleteAsync(thumb.uri, { idempotent: true });
+  for (const [edge, quality] of [[640, 0.65], [480, 0.6], [360, 0.5]]) {
+    const thumb = await ImageManipulator.manipulateAsync(photoUri(key, localFile),
+      [{ resize: fitPhoto(asset.width, asset.height, edge) }],
+      { compress: quality, format: ImageManipulator.SaveFormat.JPEG });
+    try {
+      const info = await FileSystem.getInfoAsync(thumb.uri);
+      if (info.exists && info.size <= THUMBNAIL_BYTES) {
+        await FileSystem.copyAsync({ from: thumb.uri, to: photoUri(key, thumbFile) });
+        break;
+      }
+    } finally { await FileSystem.deleteAsync(thumb.uri, { idempotent: true }); }
+  }
+  if (!(await FileSystem.getInfoAsync(photoUri(key, thumbFile))).exists) throw new Error('Could not prepare a small preview. Choose another photo.');
   return { id, repoPath: `images/uploads/${id}.jpg`, localFile, thumbFile };
 }
 

@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Alert, AppState, FlatList, Image, Platform, Pressable, RefreshControl, Share, StyleSheet, Text, TextInput, View,
+  Alert, AppState, FlatList, Platform, Pressable, RefreshControl, Share, StyleSheet, Text, TextInput, View,
 } from 'react-native';
 import { Car, carTitle, fetchCars, imageUrl, setSold } from '../cars';
 import { loadDraft } from '../drafts';
 import { clearToken } from '../github';
 import { colors, radius } from '../theme';
+import { CachedPhoto } from '../CachedPhoto';
+import { thumbnailUrl } from '../imageSources';
 import { Button } from '../ui';
 import * as SecureStore from 'expo-secure-store';
 import { fetchSiteStatus, InventoryFilter, listingUrl, publicationStatus, SiteEntry, visibleCars } from '../inventory';
@@ -152,6 +154,9 @@ export function InventoryScreen(props: {
       {!!loadError && <Text style={{ color: '#ff8a8a', marginBottom: 12 }}>{loadError} Pull down to retry.</Text>}
       <FlatList
         data={shown}
+        initialNumToRender={6}
+        maxToRenderPerBatch={4}
+        windowSize={5}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
         keyExtractor={(c) => c.path ?? carTitle(c)}
@@ -164,7 +169,7 @@ export function InventoryScreen(props: {
           <View style={[styles.card, { flexDirection: 'row', alignItems: 'center' }]}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Edit ${carTitle(item)}`}
               style={{ flex: 1, flexDirection: 'row', alignItems: 'center', padding: 10, gap: 10 }} onPress={() => props.onEdit(item)}>
-              <Image source={{ uri: imageUrl(item.main_image) }} resizeMode="contain" style={{ width: 72, height: 48, borderRadius: 6, backgroundColor: '#000' }} />
+              <CachedPhoto uri={imageUrl(item.main_image)} previewUri={thumbnailUrl(item.main_image)} thumbnail style={{ width: 72, height: 48, borderRadius: 6, backgroundColor: '#000' }} />
               <View style={{ flex: 1, gap: 4 }}>
                 <Text style={{ color: colors.text, fontSize: 15, fontWeight: '700' }} numberOfLines={2}>{carTitle(item)}</Text>
                 <Text style={{ color: colors.muted, fontSize: 12 }}>${formatNumber(item.price)} · {formatNumber(item.mileage)} mi</Text>
@@ -179,7 +184,7 @@ export function InventoryScreen(props: {
         ) : (
           <Pressable style={[styles.card, item.sold && { opacity: 0.65 }]} onPress={() => props.onEdit(item)}>
             {item.main_image ? (
-              <Image source={{ uri: imageUrl(item.main_image) }} resizeMode="contain" style={[styles.photo]} />
+              <CachedPhoto uri={imageUrl(item.main_image)} previewUri={thumbnailUrl(item.main_image)} thumbnail style={[styles.photo]} />
             ) : (
               <View style={[styles.photo, styles.noPhoto]}><Text style={{ color: colors.muted }}>No photo</Text></View>
             )}

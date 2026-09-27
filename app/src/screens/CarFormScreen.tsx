@@ -8,6 +8,7 @@ import {
   removeCar, validateCar,
 } from '../cars';
 import { pickPhotos } from '../photos';
+import { MAX_PHOTOS } from '../photoLimits';
 import { PhotoEditor } from '../PhotoEditor';
 import { MODELS, makeKey } from '../suggestions';
 import { Draft, createDraft, deleteDraft, draftKey, loadDraft, prepareDraft, saveDraft } from '../drafts';
@@ -77,7 +78,7 @@ export function CarFormScreen(props: { inventory: Car[]; car: Car | null; onDone
     if (locked.current) return;
     locked.current = true; setBusy(true);
     try {
-      await pickPhotos(10 - current.current.images.length, key, async (photo) => {
+      await pickPhotos(MAX_PHOTOS - current.current.images.length, key, async (photo) => {
         await apply({ ...current.current, images: [...current.current.images, photo] });
       }, setProgress);
     } catch (e) {

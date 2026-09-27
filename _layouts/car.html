@@ -163,11 +163,18 @@
         const mainImg = document.getElementById('gallery-main-img');
         let current = 0;
 
+        let imageRequest = 0;
+        function prefetchNext(index) {
+            if (photos[index + 1]) { const next = new Image(); next.src = photos[index + 1]; }
+        }
         function setMain(index) {
             current = index;
             thumbs.forEach((t, i) => t.classList.toggle('active', i === index));
-            mainImg.style.opacity = 0;
-            setTimeout(() => { mainImg.src = photos[index]; mainImg.style.opacity = 1; }, 180);
+            const request = ++imageRequest;
+            const next = new Image();
+            next.onload = () => { if (request === imageRequest) { mainImg.src = photos[index]; prefetchNext(index); } };
+            next.onerror = () => { if (request === imageRequest) mainImg.src = photos[index]; };
+            next.src = photos[index];
         }
         thumbs.forEach((t, i) => t.addEventListener('click', () => setMain(i)));
 
@@ -189,6 +196,7 @@
         }
         function renderLb() {
             lbImg.src = photos[current];
+            lbImg.onload = () => prefetchNext(current);
             lbCount.textContent = (current + 1) + ' / ' + photos.length;
         }
         function step(delta) {

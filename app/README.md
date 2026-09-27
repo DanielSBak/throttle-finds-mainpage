@@ -108,3 +108,12 @@ npx expo export --platform ios
 - The website serves `inventory-status.json` with public listing paths and revision markers. Cover areas use 3:2 and preserve framing.
 
 Validation: typecheck, regression tests for ordering/search/crop geometry/revisions, iOS JavaScript export, Jekyll build and an isolated Expo Go simulator preview. Preview uses fake credentials and in-memory GitHub writes; no test listings are published. Crop/save, fullscreen view and button-based reorder/cover selection were checked on the simulator. Automated simulator drags delivered zero movement, so physical-device drag and pinch behavior still needs a TestFlight smoke test.
+
+
+### Photo performance (next build, not submitted yet)
+
+- Up to **30 photos per listing**, with sequential preparation/upload and retry-safe file names.
+- Inventory and photo grids use previews rather than full images. `expo-image` caches images in memory and on disk; full-screen view loads the selected full photo and prefetches at most its two neighbors after it loads. Missing previews fall back to the original; failed loads offer a retry.
+- New photos target at most 600 KiB (up to 1600 px on the long edge), previews at most 80 KiB (up to 640 px). Original source pixels are not enlarged. Existing full-size files are retained; `scripts/backfill-thumbnails.py` creates missing previews on macOS.
+- Website inventory uses the same previews; detail view and lightbox retain full images. Removed artificial delays when selecting a photo.
+- These changes reduce transferred bytes and repeated downloads. They do not promise millisecond cold loads over every connection. Existing installed builds need a new TestFlight build to receive these app changes.

@@ -1,4 +1,5 @@
 import { SITE_URL } from './config';
+import { MAX_PHOTOS } from './photoLimits';
 import { blobSha, deleteFile, getTextFile, listDir, putTextFile } from './github';
 import { encodeBase64 } from './base64';
 
@@ -195,7 +196,7 @@ export function validateCar(car: Car, photoCount: number): string | null {
   if (price === null || Number(price) <= 0) return 'Enter a price greater than zero (e.g. 24,500)';
   const mileage = normalizeNumber(car.mileage);
   if (mileage === null || !Number.isInteger(Number(mileage))) return 'Enter mileage as a whole number (e.g. 93,000)';
-  if (photoCount < 1 || photoCount > 10) return 'Add between 1 and 10 photos';
+  if (photoCount < 1 || photoCount > MAX_PHOTOS) return `Add between 1 and ${MAX_PHOTOS} photos`;
   return null;
 }
 

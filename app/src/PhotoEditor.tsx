@@ -4,6 +4,10 @@ import { DraftImage, photoUri } from './drafts';
 import { imageUrl } from './cars';
 import { cropPhoto } from './photos';
 import { clamp, cropRectangle, movePhoto } from './photoGeometry';
+import { MAX_PHOTOS } from './photoLimits';
+import { CachedPhoto } from './CachedPhoto';
+import { thumbnailUrl } from './imageSources';
+import { Image as ExpoImage } from 'expo-image';
 import { colors, radius } from './theme';
 
 function Action({ title, onPress, disabled = false }: { title: string; onPress: () => void; disabled?: boolean }) {
@@ -51,6 +55,13 @@ export function PhotoEditor(props: {
   const row = cell * 2 / 3 + 44 + 8;
   const index = images.findIndex(p => p.id === selected);
   const photo = images[index];
+  function previewUri(p: DraftImage) {
+    return p.thumbFile ? photoUri(draftKey, p.thumbFile) : p.localFile ? photoUri(draftKey, p.localFile) : thumbnailUrl(p.repoPath);
+  }
+  function prefetchNeighbors() {
+    const urls = [images[index - 1], images[index + 1]].filter(Boolean).filter(p => !p.localFile).map(p => imageUrl(p.repoPath));
+    if (urls.length) void ExpoImage.prefetch(urls, { cachePolicy: 'disk' }).catch(() => {});
+  }
   const change = (next: DraftImage[]) => { void props.onChange(next).catch(() => Alert.alert('Draft not saved', 'Free up space and try again before leaving.')); };
   const target = (from: number, dx: number, dy: number) => {
     const col = clamp(Math.round(from % 3 + dx / (cell + 8)), 0, 2);
@@ -66,7 +77,7 @@ export function PhotoEditor(props: {
     ]);
   }
   return <View>
-    <Text style={styles.heading}>Photos · {images.length}/10</Text>
+    <Text style={styles.heading}>Photos · {images.length}/{MAX_PHOTOS}</Text>
     <Text style={styles.help}>First photo is the cover. Tap to view or crop. Drag the Move handle to reorder.</Text>
     <View onLayout={e => setWidth(e.nativeEvent.layout.width)} style={styles.grid}>
       {width > 0 && images.map((p, i) => <View key={p.id}
@@ -75,7 +86,7 @@ export function PhotoEditor(props: {
           drag?.from === i && { transform: [{ translateX: drag.dx }, { translateY: drag.dy }], opacity: 0.85 }]}>
         <Pressable accessibilityRole="button" accessibilityLabel={`Open photo ${i + 1}${i === 0 ? ', cover' : ''}`}
           onPress={() => { Keyboard.dismiss(); setSelected(p.id); }}>
-          <Image source={{ uri: uriFor(p, draftKey) }} resizeMode="contain" style={{ width: '100%', aspectRatio: 1.5, backgroundColor: '#000' }} />
+          <CachedPhoto uri={uriFor(p, draftKey)} previewUri={previewUri(p)} thumbnail style={{ width: '100%', aspectRatio: 1.5, backgroundColor: '#000' }} />
           <View style={styles.tag}><Text style={styles.tagText}>{i === 0 ? 'COVER' : i + 1}</Text></View>
         </Pressable>
         <DragHandle onStart={() => { props.onDragging(true); setDrag({ from: i, to: i, dx: 0, dy: 0 }); }}
@@ -83,7 +94,7 @@ export function PhotoEditor(props: {
           onEnd={(dx, dy) => { const to = target(i, dx, dy); stop(); if (to !== i) change(movePhoto(images, i, to)); }} onCancel={stop} />
       </View>)}
     </View>
-    {images.length < 10 && <Action title="＋ Add photos" onPress={props.onAdd} />}
+    {images.length < MAX_PHOTOS && <Action title="＋ Add photos" onPress={props.onAdd} />}
     <Modal visible={!!photo} animationType="slide" onRequestClose={() => { if (!cropping) setSelected(null); }}>
       <SafeAreaView style={styles.modal}>
         {photo && (cropping ? <CropEditor photo={photo} draftKey={draftKey} onCancel={() => setCropping(false)}
@@ -98,7 +109,7 @@ export function PhotoEditor(props: {
           <ScrollView style={StyleSheet.absoluteFill} centerContent
             minimumZoomScale={1} maximumZoomScale={3} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}
             key={photo.id}>
-            <Image source={{ uri: uriFor(photo, draftKey) }} resizeMode="contain" style={{ width: previewSize.width, height: previewSize.height }}
+            <CachedPhoto uri={uriFor(photo, draftKey)} previewUri={previewUri(photo)} onLoad={prefetchNeighbors} style={{ width: previewSize.width, height: previewSize.height }}
               accessibilityLabel={`Photo ${index + 1}`} />
           </ScrollView>
           </View>
