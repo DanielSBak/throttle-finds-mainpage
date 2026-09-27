@@ -13,7 +13,8 @@ exterior_color: "Silver"
 interior_color: "Red / Black"
 title_status: "Clean Title"
 sold: true
-main_image: "images/uploads/2018-merceds-c63-mu3c7lj2-1.jpg"
+main_image: "images/uploads/7d27a543-993e-4cbc-b33a-322a19ab809e.jpg"
+publication_id: "4be353c8a875319f3dc38b76ad287e96c6a4b54f"
 gallery:
   - "images/uploads/2018-merceds-c63-mu3c7lj2-2.jpg"
   - "images/uploads/2018-merceds-c63-mu3c7lj2-3.jpg"
