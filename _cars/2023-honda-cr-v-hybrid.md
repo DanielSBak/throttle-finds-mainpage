@@ -13,7 +13,8 @@ exterior_color: "Gray"
 interior_color: "Black"
 title_status: "Clean Title"
 sold: true
-main_image: "images/uploads/2023-honda-cr-v-hybrid-mtxspb8m-1.jpg"
+main_image: "images/uploads/e582346b-baab-45d3-adbf-7be28148d4a5.jpg"
+publication_id: "85190ea08b91362bb41a383a4bc6326fa5775762"
 gallery:
   - "images/uploads/2023-honda-cr-v-hybrid-mtxspb8m-2.jpg"
   - "images/uploads/2023-honda-cr-v-hybrid-mtxspb8m-3.jpg"
