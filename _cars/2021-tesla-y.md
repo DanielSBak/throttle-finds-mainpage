@@ -13,7 +13,8 @@ exterior_color: "White"
 interior_color: "Black"
 title_status: "Salvage Title"
 sold: false
-main_image: "images/uploads/2021-tesla-y-mttg1gux-1.jpg"
+main_image: "images/uploads/0578138a-ca55-4f54-9965-025588fb1360.jpg"
+publication_id: "e46893e4284d306d61d046e511ac7ce200d8cdfa"
 gallery:
   - "images/uploads/2021-tesla-y-mttg1gux-2.jpg"
   - "images/uploads/2021-tesla-y-mttg1gux-3.jpg"
