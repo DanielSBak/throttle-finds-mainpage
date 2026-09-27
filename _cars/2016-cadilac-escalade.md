@@ -13,7 +13,8 @@ exterior_color: "Black"
 interior_color: "Black"
 title_status: "Clean Title"
 sold: false
-main_image: "images/uploads/2016-cadilac-escalade-mtn0rcir-1.jpg"
+main_image: "images/uploads/934192de-cbf8-4c81-8d1e-3cd39baad8fe.jpg"
+publication_id: "d379648174498126f12791303ef2f354e979365b"
 gallery:
   - "images/uploads/2016-cadilac-escalade-mtn0rcir-2.jpg"
   - "images/uploads/2016-cadilac-escalade-mtn0rcir-3.jpg"
