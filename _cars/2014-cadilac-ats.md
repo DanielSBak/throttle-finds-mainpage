@@ -13,7 +13,8 @@ exterior_color: "Black"
 interior_color: "Black"
 title_status: "Clean Title"
 sold: true
-main_image: "images/uploads/2014-cadilac-ats-mtn0i74u-1.jpg"
+main_image: "images/uploads/27fca55e-e305-4e35-ae96-e97bf4250ccd.jpg"
+publication_id: "6bdda3753f4b063ba78a4d3ddae5cde4c8b4587d"
 gallery:
   - "images/uploads/2014-cadilac-ats-mtn0i74u-2.jpg"
   - "images/uploads/2014-cadilac-ats-mtn0i74u-3.jpg"
