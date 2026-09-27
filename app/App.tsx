@@ -15,6 +15,7 @@ type Screen =
   | { name: 'form'; car: Car | null };
 
 export default function App() {
+  const [inventory, setInventory] = useState<Car[]>([]);
   const [screen, setScreen] = useState<Screen>({ name: 'loading' });
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function App() {
       {screen.name === 'login' && <LoginScreen onSignedIn={() => setScreen({ name: 'inventory' })} />}
       {screen.name === 'inventory' && (
         <InventoryScreen
+          onLoaded={setInventory}
           onAdd={() => setScreen({ name: 'form', car: null })}
           onEdit={(car) => setScreen({ name: 'form', car })}
           onSignedOut={() => setScreen({ name: 'login' })}
@@ -43,6 +45,7 @@ export default function App() {
       )}
       {screen.name === 'form' && (
         <CarFormScreen
+          inventory={inventory}
           car={screen.car}
           onDone={() => setScreen({ name: 'inventory' })}
           onCancel={() => setScreen({ name: 'inventory' })}

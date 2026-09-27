@@ -7,7 +7,7 @@ import { fitPhoto } from './photoSizing';
 
 const TARGET_BYTES = 900 * 1024;
 
-async function compress(asset: ImagePicker.ImagePickerAsset, key: string): Promise<DraftImage> {
+async function compress(asset: { uri: string; width: number; height: number }, key: string): Promise<DraftImage> {
   const id = randomUUID();
   const localFile = `${id}.jpg`;
   const thumbFile = `${id}-thumb.jpg`;
@@ -44,5 +44,28 @@ export async function pickPhotos(limit: number, key: string, onPhoto: (photo: Dr
   for (let i = 0; i < assets.length; i++) {
     onProgress(`Preparing photo ${i + 1} of ${assets.length}…`);
     await onPhoto(await compress(assets[i], key));
+  }
+}
+
+/** Write a new image, never overwrite an uploaded photo or the uncropped source. */
+export async function cropPhoto(photo: DraftImage, uri: string, key: string,
+  rectangle: { originX: number; originY: number; width: number; height: number }): Promise<DraftImage> {
+  await ensureDraftDirectory(key);
+  let downloaded: string | undefined;
+  let cropped: ImageManipulator.ImageResult | undefined;
+  try {
+    if (/^https?:/.test(uri)) {
+      downloaded = `${FileSystem.cacheDirectory}${randomUUID()}-source.jpg`;
+      const response = await FileSystem.downloadAsync(uri, downloaded);
+      if (response.status !== 200) throw new Error('Could not download the original photo. Try again after the website finishes updating.');
+    }
+    cropped = await ImageManipulator.manipulateAsync(downloaded ?? uri, [{ crop: rectangle }],
+      { compress: 1, format: ImageManipulator.SaveFormat.JPEG });
+    const result = await compress(cropped, key);
+    return { ...result, originalFile: photo.originalFile ?? photo.localFile,
+      originalRepoPath: photo.originalRepoPath ?? photo.repoPath };
+  } finally {
+    if (cropped) await FileSystem.deleteAsync(cropped.uri, { idempotent: true }).catch(() => {});
+    if (downloaded) await FileSystem.deleteAsync(downloaded, { idempotent: true }).catch(() => {});
   }
 }

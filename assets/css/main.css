@@ -392,7 +392,10 @@ section { padding: 90px 0; }
 .car-img-section {
     position: relative;
     overflow: hidden;
-    min-height: 300px;
+    min-height: 0;
+    aspect-ratio: 3 / 2;
+    align-self: start;
+    background: #08090b;
     display: block;
 }
 .main-img {
@@ -400,11 +403,11 @@ section { padding: 90px 0; }
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     transition: transform 0.8s cubic-bezier(.2,.8,.2,1), opacity 0.25s ease;
 }
-.car-card:hover .main-img { transform: scale(1.05); }
+.car-card:hover .main-img { transform: none; }
 .car-img-section::after {
     content: "";
     position: absolute;
@@ -564,10 +567,11 @@ a.car-title-link:hover .car-title { color: #ff8a8a; }
 }
 .gallery-main img {
     width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
+    aspect-ratio: 3 / 2;
+    object-fit: contain;
     display: block;
     transition: opacity 0.25s ease;
+    background: #08090b;
 }
 .gallery-main .expand-hint {
     position: absolute;
@@ -646,7 +650,7 @@ a.car-title-link:hover .car-title { color: #ff8a8a; }
     transition: transform 0.4s cubic-bezier(.2,.8,.2,1), border-color 0.4s;
 }
 .mini-card:hover { transform: translateY(-6px); border-color: rgba(255,120,120,0.28); }
-.mini-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+.mini-card img { width: 100%; aspect-ratio: 3 / 2; object-fit: contain; background: #08090b; display: block; }
 .mini-card .pad { padding: 16px 18px; }
 .mini-card .mini-title { font-weight: 800; font-size: 1rem; }
 .mini-card .mini-price { color: #ff8a8a; font-weight: 800; font-size: 0.95rem; margin-top: 2px; }
@@ -868,7 +872,7 @@ footer .fineprint { color: #565c64; font-size: 0.8rem; margin-top: 8px; }
 @media (max-width: 960px) {
     .features-grid, .contact-grid { grid-template-columns: 1fr; }
     .car-card { grid-template-columns: 1fr; }
-    .car-img-section { min-height: 0; aspect-ratio: 16 / 9; position: relative; }
+    .car-img-section { min-height: 0; aspect-ratio: 3 / 2; position: relative; }
     .car-layout { grid-template-columns: 1fr; }
     .car-info { position: static; }
     .gallery-thumbs { grid-template-columns: repeat(4, 1fr); }

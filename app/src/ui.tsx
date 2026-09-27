@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { suggestions } from './suggestions';
 import {
   ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View,
   type KeyboardTypeOptions,
@@ -42,7 +43,10 @@ export function Field(props: {
   placeholder?: string;
   keyboardType?: KeyboardTypeOptions;
   multiline?: boolean;
+  suggestions?: string[];
 }) {
+  const [focused, setFocused] = useState(false);
+  const options = focused ? suggestions(props.value, props.suggestions ?? []) : [];
   return (
     <View style={styles.field}>
       <Text style={styles.label}>{props.label}</Text>
@@ -50,6 +54,9 @@ export function Field(props: {
         style={[styles.input, props.multiline && { minHeight: 90, textAlignVertical: 'top' }]}
         value={props.value}
         onChangeText={props.onChange}
+        accessibilityLabel={props.label}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         placeholder={props.placeholder}
         placeholderTextColor="#5f656d"
         keyboardType={props.keyboardType}
@@ -57,6 +64,12 @@ export function Field(props: {
         autoCapitalize="none"
         autoCorrect={false}
       />
+      {options.length > 0 && <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
+        {options.map(option => <Pressable key={option} accessibilityRole="button" accessibilityLabel={`Use ${option}`}
+          onPress={() => props.onChange(option)} style={({ pressed }) => [styles.chip, { minHeight: 44, justifyContent: 'center', opacity: pressed ? 0.6 : 1 }]}>
+          <Text style={{ color: colors.text }}>{option}</Text>
+        </Pressable>)}
+      </View>}
     </View>
   );
 }

@@ -159,3 +159,80 @@ test('retry after a failed second photo reuses first photo and thumbnail, then s
   assert.equal(saved.price, '24500');
   assert.equal(saved.mileage, '93000');
 });
+
+test('inventory always puts sold cars last, preserves available order, and combines search with filters', () => {
+  const h = harness(), cars = h.load('cars'), inventory = h.load('inventory');
+  const available = { ...sample(cars), path: '_cars/available.md', vin: 'ABC123' };
+  const sold = { ...available, path: '_cars/sold.md', sold: true };
+  const newer = { ...available, path: '_cars/newer.md', year: '2025' };
+  const input = [sold, newer, available];
+  assert.equal(inventory.visibleCars(input, '', 'All').map(c => c.path).join(','), '_cars/newer.md,_cars/available.md,_cars/sold.md');
+  assert.equal(input[0].sold, true);
+  assert.equal(inventory.visibleCars(input, 'ford abc123', 'Available').length, 2);
+  assert.equal(inventory.visibleCars(input, '2025', 'Sold').length, 0);
+  assert.equal(inventory.visibleCars(input, '', 'Sold').length, 1);
+});
+
+test('reordering moves the cover without losing photos or changing stable upload destinations', () => {
+  const move = harness().load('photoGeometry').movePhoto;
+  const photos = ['a', 'b', 'c', 'd'];
+  assert.equal(move(photos, 3, 0).join(), 'd,a,b,c');
+  assert.equal(move(photos, 0, 3).join(), 'b,c,d,a');
+  assert.equal(move(photos, 2, 1).join(), 'a,c,b,d');
+  assert.equal(photos.join(), 'a,b,c,d');
+  assert.equal(move(photos, -1, 0), photos);
+});
+
+test('3:2 crop stays inside portrait, landscape and small originals at every edge and zoom', () => {
+  const crop = harness().load('photoGeometry').cropRectangle;
+  for (const [w, h] of [[3000, 4000], [4000, 3000], [6000, 2000], [160, 90]]) {
+    for (const zoom of [1, 1.25, 2, 3]) for (const x of [0, 0.5, 1]) for (const y of [0, 0.5, 1]) {
+      const r = crop(w, h, zoom, x, y);
+      assert.ok(r.originX >= 0 && r.originY >= 0);
+      assert.ok(r.originX + r.width <= w && r.originY + r.height <= h);
+      assert.ok(Math.abs(r.width - r.height * 1.5) <= 1.5);
+    }
+  }
+  const bottom = crop(3000, 4000, 1, 0.5, 1);
+  assert.equal(bottom.originY, 2000); // Remove sky instead of centering automatically.
+  assert.throws(() => crop(0, 100, 1, 0.5, 0.5));
+});
+
+test('publication status requires an exact deployed revision; sharing uses existing filenames', () => {
+  const h = harness(), inv = h.load('inventory'), cars = h.load('cars');
+  const car = { ...sample(cars), path: '_cars/old-listing.md', publication_id: 'new' };
+  assert.equal(inv.publicationStatus(car, null), 'Saved');
+  assert.equal(inv.publicationStatus(car, []), 'Updating');
+  assert.equal(inv.publicationStatus(car, [{ path: car.path, revision: 'old' }]), 'Updating');
+  assert.equal(inv.publicationStatus(car, [{ path: car.path, revision: 'new' }]), 'Live');
+  assert.equal(inv.publicationStatus({ ...car, publication_id: undefined }, []), 'Saved');
+  assert.equal(inv.listingUrl(car), 'https://throttlefinds.com/cars/old-listing/');
+  assert.equal(inv.listingUrl(sample(cars)), null);
+});
+
+test('publishing revisions are deterministic and change for text, cover and sold edits', async () => {
+  const h = harness(), cars = h.load('cars');
+  let car = { ...sample(cars), price: '24500', mileage: '93000', path: '_cars/status.md', main_image: 'a.jpg' };
+  let previous = '';
+  for (const edit of [{}, { body: 'New notes' }, { main_image: 'b.jpg' }, { sold: true }]) {
+    car = { ...car, ...edit };
+    const sha = await cars.saveCar(car);
+    const parsed = cars.parseCar(Buffer.from(h.remote.get(car.path).content, 'base64').toString());
+    assert.ok(parsed.publication_id);
+    assert.notEqual(parsed.publication_id, previous);
+    previous = parsed.publication_id;
+    const writes = h.writes.length;
+    await cars.saveCar(car); // Lost-response retry, with the old sha.
+    assert.equal(h.writes.length, writes);
+    car = { ...parsed, path: car.path, sha };
+  }
+});
+
+test('suggestions are optional, case-insensitive and deduplicate inventory variants', () => {
+  const { suggestions, makeKey } = harness().load('suggestions');
+  assert.equal(suggestions('', ['BMW']).length, 0);
+  assert.equal(suggestions('b', ['BMW', 'bmw', 'Bentley']).join(), 'BMW,Bentley');
+  assert.equal(suggestions('custom', ['BMW']).length, 0);
+  assert.equal(makeKey('Mercedes'), makeKey('Mercedes-Benz'));
+  assert.equal(suggestions('F1', ['F-150', 'Fiesta']).join(), 'F-150');
+});

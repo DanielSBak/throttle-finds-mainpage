@@ -1,7 +1,9 @@
 import { SITE_URL } from './config';
-import { deleteFile, getTextFile, listDir, putTextFile } from './github';
+import { blobSha, deleteFile, getTextFile, listDir, putTextFile } from './github';
+import { encodeBase64 } from './base64';
 
 export interface Car {
+  publication_id?: string;
   year: string;
   make: string;
   model: string;
@@ -75,7 +77,7 @@ export function parseCar(text: string): Car {
       car.sold = unquote(value).toLowerCase() === 'true';
       continue;
     }
-    if (key in car) {
+    if (key in car || key === 'publication_id') {
       (car as unknown as Record<string, string>)[key] = unquote(value);
     }
   }
@@ -105,6 +107,7 @@ export function serializeCar(car: Car): string {
     `sold: ${car.sold}`,
     `main_image: ${yamlString(car.main_image)}`,
   ];
+  if (car.publication_id) lines.push(`publication_id: ${yamlString(car.publication_id)}`);
   if (car.gallery.length > 0) {
     lines.push('gallery:');
     for (const img of car.gallery) lines.push(`  - ${yamlString(img)}`);
@@ -154,7 +157,7 @@ export async function saveCar(car: Car): Promise<string> {
   const message = isNew
     ? `Add listing: ${carTitle(car)} [via app]`
     : `Update listing: ${carTitle(car)} [via app]`;
-  return putTextFile(path, serializeCar(car), message, car.sha);
+  return putTextFile(path, await stampedListing(car), message, car.sha);
 }
 
 export async function setSold(car: Car, sold: boolean): Promise<void> {
@@ -163,7 +166,7 @@ export async function setSold(car: Car, sold: boolean): Promise<void> {
   const message = sold
     ? `Mark sold: ${carTitle(car)} [via app]`
     : `Mark available: ${carTitle(car)} [via app]`;
-  await putTextFile(car.path, serializeCar(updated), message, car.sha);
+  await putTextFile(car.path, await stampedListing(updated), message, car.sha);
 }
 
 export async function removeCar(car: Car): Promise<void> {
@@ -194,4 +197,10 @@ export function validateCar(car: Car, photoCount: number): string | null {
   if (mileage === null || !Number.isInteger(Number(mileage))) return 'Enter mileage as a whole number (e.g. 93,000)';
   if (photoCount < 1 || photoCount > 10) return 'Add between 1 and 10 photos';
   return null;
+}
+
+/** Deterministic revision: identical retries produce the same listing and website marker. */
+async function stampedListing(car: Car): Promise<string> {
+  const publication_id = await blobSha(encodeBase64(serializeCar({ ...car, publication_id: undefined })));
+  return serializeCar({ ...car, publication_id });
 }

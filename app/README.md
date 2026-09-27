@@ -96,3 +96,15 @@ npx expo export --platform ios
 ```
 
 Тести моделюють GitHub і файлове сховище: обрив відповіді після коміту, збій посеред фото, конфлікт SHA, відновлення чернетки, лапки й Unicode, однакові моделі та валідацію чисел. Нативний вибір/стиснення фото й відновлення після закриття iOS потрібно також перевіряти на iPhone.
+
+## Version 1.1.0 — inventory and photo tools
+
+- Available cars appear before sold cars. Search by make, model, year or VIN; filter All / Available / Sold. Cards / List preference is remembered on the phone.
+- Tap a photo for a full-screen view. Drag its **Move** handle to reorder, or use **Move left / Move right** in the viewer. The first photo is the cover.
+- **Crop cover · 3:2** supports positioning and zoom, with arrow buttons for precise adjustments. **Use as cover** saves a new compressed photo and thumbnail. Cancel leaves the draft unchanged. The uncropped source is retained while that draft exists; it is not permanent cloud undo history.
+- Make/model suggestions work offline, with common US-market options plus values in the loaded inventory. Free typing is always allowed. VIN lookup is not included.
+- **Share** opens the iOS share sheet with the public listing URL. For a newly saved listing, wait for the website to finish updating before sharing with a customer.
+- Publication labels: **Live** means the saved revision matches the deployed website manifest; **Updating** means the website has not caught up; **Saved** means its live revision is unverified. Legacy listings get a revision marker after their next save in 1.1.0. Status checks run while Inventory is in the foreground; pull down to refresh.
+- The website serves `inventory-status.json` with public listing paths and revision markers. Cover areas use 3:2 and preserve framing.
+
+Validation: typecheck, regression tests for ordering/search/crop geometry/revisions, iOS JavaScript export, Jekyll build and an isolated Expo Go simulator preview. Preview uses fake credentials and in-memory GitHub writes; no test listings are published. Crop/save, fullscreen view and button-based reorder/cover selection were checked on the simulator. Automated simulator drags delivered zero movement, so physical-device drag and pinch behavior still needs a TestFlight smoke test.

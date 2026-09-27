@@ -1,24 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView,
+  ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView,
   StyleSheet, Text, View,
 } from 'react-native';
 import {
   Car, DRIVE_OPTIONS, FUEL_OPTIONS, TITLE_OPTIONS, carTitle,
-  imageUrl, removeCar, validateCar,
+  removeCar, validateCar,
 } from '../cars';
 import { pickPhotos } from '../photos';
-import { Draft, createDraft, deleteDraft, draftKey, loadDraft, photoUri, prepareDraft, saveDraft } from '../drafts';
+import { PhotoEditor } from '../PhotoEditor';
+import { MODELS, makeKey } from '../suggestions';
+import { Draft, createDraft, deleteDraft, draftKey, loadDraft, prepareDraft, saveDraft } from '../drafts';
 import { publishDraft } from '../publish';
 import { colors, radius } from '../theme';
 import { Button, ChipSelect, Field } from '../ui';
 
-export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCancel: () => void }) {
+export function CarFormScreen(props: { inventory: Car[]; car: Car | null; onDone: () => void; onCancel: () => void }) {
   const editing = props.car !== null;
   const key = draftKey(props.car);
   const [draft, setDraft] = useState(() => createDraft(props.car));
   const current = useRef(draft);
   const [ready, setReady] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const [busy, setBusy] = useState(false);
   const locked = useRef(false);
   const [progress, setProgress] = useState('');
@@ -82,13 +85,6 @@ export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCa
     } finally { locked.current = false; setBusy(false); setProgress(''); }
   }
 
-  function removePhoto(index: number) {
-    if (!locked.current) void apply({ ...current.current, images: current.current.images.filter((_, i) => i !== index) });
-  }
-  function makeCover(index: number) {
-    if (!locked.current) void apply({ ...current.current, images: [current.current.images[index], ...current.current.images.filter((_, i) => i !== index)] });
-  }
-
   async function leave() {
     if (locked.current) return;
     locked.current = true; setBusy(true);
@@ -121,7 +117,7 @@ export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCa
       await publishDraft(key, prepared, setProgress);
       try { await deleteDraft(key); }
       catch { /* Publishing succeeded. An unchanged retained draft is safe to retry. */ }
-      Alert.alert('Published!', 'The website will update after GitHub finishes rebuilding it.');
+      Alert.alert('Saved successfully', 'The website is updating. Check the small publication status in Inventory.');
       props.onDone();
     } catch (e) {
       Alert.alert('Could not publish', e instanceof Error ? e.message : String(e));
@@ -155,7 +151,7 @@ export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCa
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.wrap} keyboardShouldPersistTaps="handled">
+      <ScrollView scrollEnabled={!dragging} contentContainerStyle={styles.wrap} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <Pressable disabled={busy} onPress={leave}><Text style={styles.cancel}>‹ Back</Text></Pressable>
           <Text style={styles.title}>{editing ? 'Edit Car' : 'Add Car'}</Text>
@@ -164,36 +160,14 @@ export function CarFormScreen(props: { car: Car | null; onDone: () => void; onCa
 
         <Text accessibilityLiveRegion="polite" style={{ color: colors.muted, marginBottom: 12 }}>{progress || draftStatus}</Text>
         <View pointerEvents={busy ? 'none' : 'auto'}>
-        <Text style={styles.sectionLabel}>Photos (first one is the cover)</Text>
-        <View style={styles.photoGrid}>
-          {images.map((img, i) => (
-            <View key={img.id} style={styles.photoCell}>
-              <Image source={{ uri: img.localFile ? photoUri(key, img.localFile) : imageUrl(img.repoPath) }} style={styles.photo} />
-              {i === 0 && <View style={styles.coverTag}><Text style={styles.coverTagText}>COVER</Text></View>}
-              <View style={styles.photoActions}>
-                {i !== 0 && (
-                  <Pressable onPress={() => makeCover(i)} style={styles.photoAction}>
-                    <Text style={styles.photoActionText}>★</Text>
-                  </Pressable>
-                )}
-                <Pressable onPress={() => removePhoto(i)} style={styles.photoAction}>
-                  <Text style={styles.photoActionText}>✕</Text>
-                </Pressable>
-              </View>
-            </View>
-          ))}
-          {images.length < 10 && (
-            <Pressable onPress={addPhotos} style={[styles.photoCell, styles.addPhoto]}>
-              <Text style={{ color: colors.muted, fontSize: 30 }}>＋</Text>
-            </Pressable>
-          )}
-        </View>
-
+        <PhotoEditor images={images} draftKey={key} onAdd={addPhotos} onDragging={setDragging}
+          onChange={next => apply({ ...current.current, images: next })} />
+        <View style={{ height: 20 }} />
         <View style={styles.rowFields}>
           <View style={{ flex: 1 }}><Field label="Year" value={car.year} onChange={(v) => set('year', v)} placeholder="2020" keyboardType="number-pad" /></View>
-          <View style={{ flex: 1.4 }}><Field label="Make" value={car.make} onChange={(v) => set('make', v)} placeholder="BMW" /></View>
-          <View style={{ flex: 1.4 }}><Field label="Model" value={car.model} onChange={(v) => set('model', v)} placeholder="M5" /></View>
         </View>
+        <View><Field label="Make" value={car.make} onChange={(v) => set('make', v)} placeholder="BMW" suggestions={[...Object.keys(MODELS), ...props.inventory.map(c => c.make)]} /></View>
+        <View><Field label="Model" value={car.model} onChange={(v) => set('model', v)} placeholder="M5" suggestions={[...Object.entries(MODELS).filter(([make]) => makeKey(make) === makeKey(car.make)).flatMap(([, models]) => models), ...props.inventory.filter(c => makeKey(c.make) === makeKey(car.make)).map(c => c.model)]} /></View>
         <View style={styles.rowFields}>
           <View style={{ flex: 1 }}><Field label="Price ($)" value={car.price} onChange={(v) => set('price', v)} placeholder="67000" keyboardType="number-pad" /></View>
           <View style={{ flex: 1 }}><Field label="Mileage" value={car.mileage} onChange={(v) => set('mileage', v)} placeholder="12000" keyboardType="number-pad" /></View>
@@ -228,27 +202,5 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
   cancel: { color: colors.muted, fontSize: 16, fontWeight: '700', width: 50 },
   title: { color: colors.text, fontSize: 20, fontWeight: '800', letterSpacing: 1 },
-  sectionLabel: {
-    color: colors.muted, fontSize: 11, fontWeight: '800',
-    letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8,
-  },
-  photoGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 18 },
-  photoCell: {
-    width: '31%', aspectRatio: 1, borderRadius: radius.md, overflow: 'hidden',
-    backgroundColor: colors.card, borderWidth: 1, borderColor: colors.cardBorder,
-  },
-  photo: { width: '100%', height: '100%' },
-  addPhoto: { alignItems: 'center', justifyContent: 'center', borderStyle: 'dashed' },
-  coverTag: {
-    position: 'absolute', top: 6, left: 6, backgroundColor: colors.red,
-    borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 2,
-  },
-  coverTagText: { color: '#fff', fontSize: 9, fontWeight: '800', letterSpacing: 1 },
-  photoActions: { position: 'absolute', top: 4, right: 4, flexDirection: 'row', gap: 4 },
-  photoAction: {
-    width: 26, height: 26, borderRadius: 13, backgroundColor: 'rgba(0,0,0,0.65)',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  photoActionText: { color: '#fff', fontSize: 13, fontWeight: '800' },
   rowFields: { flexDirection: 'row', gap: 10 },
 });

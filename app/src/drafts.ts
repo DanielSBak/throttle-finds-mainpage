@@ -9,6 +9,8 @@ export interface DraftImage {
   /** File names relative to the draft directory; survive iOS container changes. */
   localFile?: string;
   thumbFile?: string;
+  originalFile?: string;
+  originalRepoPath?: string;
 }
 export interface Draft {
   version: 1;
