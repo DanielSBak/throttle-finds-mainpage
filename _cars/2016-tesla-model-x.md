@@ -12,9 +12,9 @@ drive: "AWD"
 exterior_color: "Grey"
 interior_color: "Beige"
 title_status: "Clean Title"
-sold: false
+sold: true
 main_image: "images/uploads/84007955-734c-415e-86b4-688eda6d9d81.jpg"
-publication_id: "ba493c136fce18cfc8073c883e3d9d3fa08c7258"
+publication_id: "e0f694b597e9f04d43124c98a06fa0e03b9a439d"
 gallery:
   - "images/uploads/2016-tesla-model-x-mu4j6i7h-2.jpg"
   - "images/uploads/2016-tesla-model-x-mu4j6i7h-3.jpg"
