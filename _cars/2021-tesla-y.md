@@ -12,9 +12,9 @@ drive: "AWD"
 exterior_color: "White"
 interior_color: "Black"
 title_status: "Salvage Title"
-sold: false
+sold: true
 main_image: "images/uploads/0578138a-ca55-4f54-9965-025588fb1360.jpg"
-publication_id: "e46893e4284d306d61d046e511ac7ce200d8cdfa"
+publication_id: "a99fe9af28e55d49f0e0c2749a82a9d0a1806913"
 gallery:
   - "images/uploads/2021-tesla-y-mttg1gux-2.jpg"
   - "images/uploads/2021-tesla-y-mttg1gux-3.jpg"
