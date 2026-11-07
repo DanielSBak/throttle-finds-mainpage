@@ -12,9 +12,9 @@ drive: "FWD"
 exterior_color: "White"
 interior_color: "Black"
 title_status: "Clean Title"
-sold: false
+sold: true
 main_image: "images/uploads/a8064899-d675-498f-adda-75bf12dcf469.jpg"
-publication_id: "66ea670e0f54fe699eeb0c0b854058a0a37bb4d9"
+publication_id: "1ea74a0aafe019f4e0ad5308ac127d24d6ec2955"
 gallery:
   - "images/uploads/2017-ford-explorer-xlt-mu4jeioh-2.jpg"
   - "images/uploads/2017-ford-explorer-xlt-mu4jeioh-3.jpg"
