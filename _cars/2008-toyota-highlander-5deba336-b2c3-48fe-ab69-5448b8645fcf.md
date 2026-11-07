@@ -12,9 +12,9 @@ drive: "AWD"
 exterior_color: "Red"
 interior_color: "Gray"
 title_status: "Salvage Title"
-sold: false
+sold: true
 main_image: "images/uploads/8b37f897-1c79-47a5-9045-622bf7bbe7f2.jpg"
-publication_id: "16072c451ede976e2a1a7d17106ee42c0187e779"
+publication_id: "dc90a42ad6bf7fd8c00e51e04f88b51f661e1437"
 gallery:
   - "images/uploads/57a71f4d-5d6e-42cd-9b8c-4b1780e1fa2d.jpg"
   - "images/uploads/6f82c4ea-a813-4967-9f1c-74683b95a253.jpg"
