@@ -12,9 +12,9 @@ drive: "FWD"
 exterior_color: "White"
 interior_color: "Tan"
 title_status: "Salvage Title"
-sold: false
+sold: true
 main_image: "images/uploads/3f3ed346-f641-40c6-a353-5a9358a66fd0.jpg"
-publication_id: "b75f3b115e5684306fc1e876b2a7715f08b83eee"
+publication_id: "e2b8e6cf8c4c385920f13280fb861988463aec06"
 gallery:
   - "images/uploads/f7af2dbe-fe90-4a9c-bcd8-b8d244fbd468.jpg"
   - "images/uploads/e6f52dbd-87bc-44ec-b5e5-ddeceb4a9135.jpg"
