@@ -12,9 +12,9 @@ drive: "RWD"
 exterior_color: "Burgundy"
 interior_color: "Burgundy / Black"
 title_status: "Clean Title"
-sold: true
+sold: false
 main_image: "images/uploads/4e3034f0-e8e2-4adf-b802-db260b746654.jpg"
-publication_id: "d9e8c9c3b4f662955d4af2eb96724373471874f4"
+publication_id: "5d93322f5675d67865bbea78e5c00c1b24005e85"
 gallery:
   - "images/uploads/2017-chevrolet-corvette-mtxt4tkv-2.jpg"
   - "images/uploads/2017-chevrolet-corvette-mtxt4tkv-3.jpg"
